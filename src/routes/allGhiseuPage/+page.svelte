@@ -54,11 +54,21 @@
             console.error('Error updating status:', error);
         }
     }
+
     function handleChange(event: Event, id: number) {
         const selectElement = event.target as HTMLSelectElement;
         const newStatus = selectElement.value;
         changeStatus(id, newStatus);
     }
+
+    async function handleActionChange(event: Event, id: number) {
+    const selectElement = event.target as HTMLSelectElement;
+    const action = selectElement.value;
+
+    if (action) {
+        goto(`/${action}`); // Navigate to the selected action's URL
+    }
+}
     onMount(fetchData);
 </script>
 
@@ -74,33 +84,41 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Cod</th>
-                    <th>Denumire</th>
-                    <th>Descriere</th>
                     <th>Icon</th>
+                    <th>Denumire</th>
+                    <th>Cod</th>
+                    <th>Descriere</th>
                     <th>Activ</th>
                     <th>Schimba Starea</th>
+                    <th>Actiuni</th> <!-- New column header -->
                 </tr>
             </thead>
             <tbody>
                 {#each ghiseuList as ghiseu}
                     <tr>
                         <td>{ghiseu.id}</td>
-                        <td>{ghiseu.cod}</td>
-                        <td>{ghiseu.denumire}</td>
-                        <td>{ghiseu.descriere}</td>
                         <td>{ghiseu.icon}</td>
+                        <td>{ghiseu.denumire}</td>
+                        <td>{ghiseu.cod}</td>
+                        <td>{ghiseu.descriere}</td>
                         <td style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">
                             {ghiseu.activ ? 'Yes' : 'No'}
                         </td>
                         <td>
                             <select
-                            on:change={(e) => handleChange(e, ghiseu.id)}
-                            value={ghiseu.activ ? 'active' : 'inactive'}
-                        >
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
+                                on:change={(e) => handleChange(e, ghiseu.id)}
+                                value={ghiseu.activ ? 'active' : 'inactive'}
+                            >
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select on:change={(e) => handleActionChange(e, ghiseu.id)}>
+                                <option value="">Select action</option>
+                                <option value={`editGhiseuPage/${ghiseu.id}`}>Edit Ghiseu</option>
+                                <option value={`allBonByIdPage/${ghiseu.id}`}>Get All Bon</option>
+                            </select>
                         </td>
                     </tr>
                 {/each}
