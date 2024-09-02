@@ -65,8 +65,25 @@
     const selectElement = event.target as HTMLSelectElement;
     const action = selectElement.value;
 
-    if (action) {
+    if (action === 'delete') {
+        deleteGhiseu(id);
+    } else if (action) {
         goto(`/${action}`); // Navigate to the selected action's URL
+    }
+}
+
+async function deleteGhiseu(id: number): Promise<void> {
+    const url = `https://localhost:7140/Ghiseu/Delete/${id}`;
+
+    try {
+        const response = await fetch(url, { method: 'DELETE' });
+        if (response.ok) {
+            fetchData(); // Refresh the data after deleting
+        } else {
+            console.error('Failed to delete Ghiseu');
+        }
+    } catch (error) {
+        console.error('Error deleting Ghiseu:', error);
     }
 }
     onMount(fetchData);
@@ -114,12 +131,14 @@
                             </select>
                         </td>
                         <td>
-                            <select on:change={(e) => handleActionChange(e, ghiseu.id)}>
-                                <option value="">Selecteaza actiunea</option>
-                                <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
-                                <option value={`allBonByIdPage/${ghiseu.id}`}>Bonurile Ghiseului</option>
-                            </select>
-                        </td>
+                           
+                                <select on:change={(e) => handleActionChange(e, ghiseu.id)}>
+                                    <option value="">Selecteaza actiunea</option>
+                                    <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
+                                    <option value={`allBonByIdPage/${ghiseu.id}`}>Bonurile Ghiseului</option>
+                                    <option value="delete">Sterge Ghiseu</option> <!-- New option for deletion -->
+                                </select>
+                         </td>
                     </tr>
                 {/each}
             </tbody>

@@ -4,9 +4,9 @@
 
 <nav>
     <ul>
-        <li><a on:click={() => goto('/')}>Home</a></li>
-        <li><a on:click={() => goto('/allGhiseuPage')}>All Ghiseu Page</a></li>
-        <li><a on:click={() => goto('/allBonPage')}>All Bon Page</a></li>
+        <li><a on:click={() => goto('/')}>Acasa</a></li>
+        <li><a on:click={() => goto('/allGhiseuPage')}>Pagina Ghisee</a></li>
+        <li><a on:click={() => goto('/allBonPage')}>Pagina Bonuri</a></li>
     </ul>
 </nav>
 
