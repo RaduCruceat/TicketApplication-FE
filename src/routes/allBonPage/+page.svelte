@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import type { Bon, ApiResponse } from '$lib/ObjectsList/types'; // Import the TypeScript types
+    import type { BonID, ApiResponse } from '$lib/ObjectsList/types'; // Import the TypeScript types
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import { goto } from '$app/navigation'; // Import navigation function
 
-    let bonList: Bon[] = [];
+    let bonList: BonID[] = [];
     let errorMessage: string = '';
 
     function navigateToAddBonPage() {
@@ -51,7 +51,7 @@
     <table>
         <thead>
             <tr>
-
+                <th>Id</th>
                 <th>Id Ghiseu</th>
                 <th>Stare</th>
                 <th>Created At</th>
@@ -61,7 +61,7 @@
         <tbody>
             {#each bonList as bon}
                 <tr>
-
+                    <td>{bon.id}</td>
                     <td>{bon.idGhiseu}</td>
                     <td>{bon.stare}</td>
                     <td>{new Date(bon.createdAt).toLocaleString()}</td>
@@ -91,6 +91,7 @@
     th, td {
         border: 1px solid #ddd;
         padding: 8px;
+        text-align: center;
     }
 
     th {

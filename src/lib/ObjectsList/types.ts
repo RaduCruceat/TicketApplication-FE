@@ -1,11 +1,13 @@
-export interface Ghiseu {
+export interface GhiseuID {
+    id: number;
     cod: string;
     denumire: string;
     descriere: string;
     icon: string;
     activ: boolean;
 }
-export interface Bon {
+export interface BonID {
+    id: number;
     idGhiseu: number;
     stare: string; // Adjust type based on actual enum values or define an enum if available
     createdAt: string; // ISO 8601 date string
