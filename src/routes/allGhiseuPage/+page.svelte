@@ -102,22 +102,22 @@
                         <td>{ghiseu.cod}</td>
                         <td>{ghiseu.descriere}</td>
                         <td style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">
-                            {ghiseu.activ ? 'Yes' : 'No'}
+                            {ghiseu.activ ? 'Da' : 'Nu'}
                         </td>
                         <td>
                             <select
                                 on:change={(e) => handleChange(e, ghiseu.id)}
                                 value={ghiseu.activ ? 'active' : 'inactive'}
                             >
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
+                                <option value="active">Activa</option>
+                                <option value="inactive">Inactiva</option>
                             </select>
                         </td>
                         <td>
                             <select on:change={(e) => handleActionChange(e, ghiseu.id)}>
-                                <option value="">Select action</option>
-                                <option value={`editGhiseuPage/${ghiseu.id}`}>Edit Ghiseu</option>
-                                <option value={`allBonByIdPage/${ghiseu.id}`}>Get All Bon</option>
+                                <option value="">Selecteaza actiunea</option>
+                                <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
+                                <option value={`allBonByIdPage/${ghiseu.id}`}>Bonurile Ghiseului</option>
                             </select>
                         </td>
                     </tr>

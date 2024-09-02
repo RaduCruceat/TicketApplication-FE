@@ -9,7 +9,7 @@ export interface GhiseuID {
 export interface BonID {
     id: number;
     idGhiseu: number;
-    stare: string; // Adjust type based on actual enum values or define an enum if available
+    stare: number; // Adjust type based on actual enum values or define an enum if available
     createdAt: string; // ISO 8601 date string
     modifiedAt: string; // ISO 8601 date string
 }

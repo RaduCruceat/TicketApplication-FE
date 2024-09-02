@@ -11,6 +11,27 @@
         goto('/addBonPage'); // Adjust the path according to your routing setup
     }
 
+    async function handleStatusChange(event: Event, id: number): Promise<void> {
+    const selectElement = event.target as HTMLSelectElement;
+    const newStatus = selectElement.value;
+    const url = newStatus === 'InCursDePreluare'
+        ? `https://localhost:7140/Bon/MarkAsInProgress/${id}`
+        : newStatus === 'Preluat'
+        ? `https://localhost:7140/Bon/MarkAsReceived/${id}`
+        : `https://localhost:7140/Bon/MarkAsClose/${id}`;
+
+    try {
+        const response = await fetch(url, { method: 'PUT' });
+        if (response.ok) {
+            fetchData(); // Refresh the data after updating the status
+        } else {
+            console.error('Failed to update status');
+        }
+    } catch (error) {
+        console.error('Error updating status:', error);
+    }
+}
+
     async function fetchData(): Promise<void> {
         try {
             const response = await fetch('https://localhost:7140/Bon/GetAll'); // Update with the actual API endpoint
@@ -53,9 +74,10 @@
             <tr>
                 <th>Id</th>
                 <th>Id Ghiseu</th>
+                <th>Data Creari</th>
+                <th>Data ultimei modificari</th>
                 <th>Stare</th>
-                <th>Created At</th>
-                <th>Modified At</th>
+                <th>Schimba Starea</th>
             </tr>
         </thead>
         <tbody>
@@ -63,9 +85,18 @@
                 <tr>
                     <td>{bon.id}</td>
                     <td>{bon.idGhiseu}</td>
-                    <td>{bon.stare}</td>
                     <td>{new Date(bon.createdAt).toLocaleString()}</td>
                     <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
+                    <td style="background-color: {bon.stare === 0 ? 'lightgreen' : bon.stare === 1 ? 'lightyellow' : 'lightcoral'};">
+                        {bon.stare === 0 ? 'InCursDePreluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                    </td>
+                    <td>
+                        <select on:change={(e) => handleStatusChange(e, bon.id)} value={bon.stare}>
+                            <option value="InCursDePreluare">In Curs De Preluare</option>
+                            <option value="Preluat">Preluat</option>
+                            <option value="Inchis">Inchis</option>
+                        </select>
+                    </td>
                 </tr>
             {/each}
         </tbody>
