@@ -105,6 +105,10 @@
 
 <form on:submit={handleSubmit}>
     <h1>Add New Bon</h1>
+    <div class="button-container">
+        <button type="button" class="top-button">Persoana Fizica</button>
+        <button type="button" class="top-button">Persoana Juridica</button>
+    </div>
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
@@ -180,6 +184,10 @@
     .success {
         color: green;
         font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .button-container {
+        display: flex;
         margin-bottom: 10px;
     }
 </style>

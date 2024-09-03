@@ -87,7 +87,7 @@
                     <td>{bon.idGhiseu}</td>
                     <td>{new Date(bon.createdAt).toLocaleString()}</td>
                     <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
-                    <td style="background-color: {bon.stare === 0 ? 'lightgreen' : bon.stare === 1 ? 'lightyellow' : 'lightcoral'};">
+                    <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
                         {bon.stare === 0 ? 'InCursDePreluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                     </td>
                     <td>

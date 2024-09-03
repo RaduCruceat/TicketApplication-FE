@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { goto } from '$app/navigation'; // Import navigation function
-    import type { Ghiseu } from '$lib/ObjectsList/types'; // Import the Ghiseu type
+    import { goto } from '$app/navigation'; 
+    import type { Ghiseu } from '$lib/ObjectsList/types'; 
+    import { onMount } from 'svelte';
 
     let cod: string = '';
     let denumire: string = '';
@@ -10,6 +11,31 @@
 
     let errorMessage: string = '';
     let successMessage: string = '';
+    let availableIcons: string[] = [];
+
+    async function fetchIcons() {
+    try {
+        const response = await fetch('https://localhost:7140/Ghiseu/GetIcons');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Fetched Icons:', data); // Debug: Log the fetched data
+
+            if (data.isSuccess && Array.isArray(data.result)) {
+                availableIcons = data.result;
+            } else {
+                console.error('Unexpected data format:', data);
+                availableIcons = []; // Ensure it's an empty array if data format is wrong
+            }
+        } else {
+            console.error('Failed to fetch icons:', response.statusText);
+            availableIcons = []; // Fallback to an empty array
+        }
+    } catch (error) {
+        console.error('Error fetching icons:', error);
+        availableIcons = []; // Fallback to an empty array
+    }
+}
+
 
     function validateForm(): boolean {
         if (!cod.trim() || !denumire.trim() || !descriere.trim() || !icon.trim()) {
@@ -21,10 +47,10 @@
     }
 
     async function handleSubmit(event: Event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault(); 
 
         if (!validateForm()) {
-            return; // Stop form submission if validation fails
+            return; 
         }
 
         const newGhiseu: Ghiseu = {
@@ -47,7 +73,6 @@
             if (response.ok) {
                 successMessage = 'Ghiseu added successfully!';
                 errorMessage = '';
-                // Navigate to the allGhiseuPage
                 goto('/allGhiseuPage');
             } else {
                 const data = await response.json();
@@ -63,6 +88,8 @@
             successMessage = '';
         }
     }
+
+    onMount(fetchIcons);
 </script>
 
 <form on:submit={handleSubmit}>
@@ -91,8 +118,14 @@
     </label>
     <label>
         Icon:
-        <input type="text" bind:value={icon} required />
+        <select bind:value={icon} required>
+            <option value="" disabled>Select an icon</option>
+            {#each availableIcons as iconFile}
+                <option value={iconFile}>{iconFile}</option>
+            {/each}
+        </select>
     </label>
+    
     <label>
         Activ:
         <input type="checkbox" bind:checked={activ} />
@@ -112,7 +145,7 @@
         margin-bottom: 10px;
     }
 
-    input, textarea {
+    input, textarea, select {
         width: 100%;
         padding: 8px;
         margin-top: 5px;
