@@ -3,9 +3,15 @@
     import type { GhiseuID, ApiResponse } from '$lib/ObjectsList/types'; // Adjust the path as needed
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import { goto } from '$app/navigation'; // Import navigation function
+    import Toast from '$lib/SvelteComponents/Toast.svelte';
 
     let ghiseuList: GhiseuID[] = [];
     let errorMessage: string = '';
+
+    let showToast: boolean = false;
+    let toastMessage: string = '';
+    let selectedGhiseuId: number | null = null;
+
 
     function navigateToAddGhiseuPage() {
         goto('/addGhiseuPage'); // Adjust the path according to your routing setup
@@ -61,34 +67,51 @@
         changeStatus(id, newStatus);
     }
 
-    async function handleActionChange(event: Event, id: number) {
+    function handleActionChange(event: Event, id: number, denumire: string) {
     const selectElement = event.target as HTMLSelectElement;
     const action = selectElement.value;
 
     if (action === 'delete') {
-        deleteGhiseu(id);
+        selectedGhiseuId = id;
+        toastMessage = `Sterge ghiseul cu denumirea ${denumire}?`;
+        showToast = true;
     } else if (action) {
-        goto(`/${action}`); // Navigate to the selected action's URL
+        goto(`/${action}`);
     }
-}
+    }
 
-async function deleteGhiseu(id: number): Promise<void> {
-    const url = `https://localhost:7140/Ghiseu/Delete/${id}`;
+    function closeToast() {
+         showToast = false;
+        selectedGhiseuId = null;
+    }
 
-    try {
-        const response = await fetch(url, { method: 'DELETE' });
-        if (response.ok) {
-            fetchData(); // Refresh the data after deleting
-        } else {
-            console.error('Failed to delete Ghiseu');
+async function deleteGhiseu(): Promise<void> {
+    if (selectedGhiseuId !== null) {
+        const url = `https://localhost:7140/Ghiseu/Delete/${selectedGhiseuId}`;
+
+        try {
+            const response = await fetch(url, { method: 'DELETE' });
+            if (response.ok) {
+                fetchData();
+                closeToast(); // Close the toast after deletion
+            } else {
+                console.error('Failed to delete Ghiseu');
+            }
+        } catch (error) {
+            console.error('Error deleting Ghiseu:', error);
         }
-    } catch (error) {
-        console.error('Error deleting Ghiseu:', error);
     }
 }
     onMount(fetchData);
 </script>
 
+{#if showToast}
+    <Toast
+        message={toastMessage}
+        onClose={closeToast}
+        onConfirm={deleteGhiseu}
+    />
+{/if}
 <Navbar /> <!-- Include the Navbar component -->
 {#if errorMessage}
     <div class="error">
@@ -131,11 +154,10 @@ async function deleteGhiseu(id: number): Promise<void> {
                             </select>
                         </td>
                         <td>
-                           
-                                <select on:change={(e) => handleActionChange(e, ghiseu.id)}>
+                                <select on:change={(e) => handleActionChange(e, ghiseu.id, ghiseu.denumire)}>
                                     <option value="">Selecteaza actiunea</option>
-                                    <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
                                     <option value={`allBonByIdPage/${ghiseu.id}`}>Bonurile Ghiseului</option>
+                                    <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
                                     <option value="delete">Sterge Ghiseu</option> <!-- New option for deletion -->
                                 </select>
                          </td>
