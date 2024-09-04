@@ -93,7 +93,7 @@
 </script>
 
 <form on:submit={handleSubmit}>
-    <h1>Add New Ghiseu</h1>
+    <h1>Adauga un ghiseu:</h1>
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
@@ -130,7 +130,7 @@
         Activ:
         <input type="checkbox" bind:checked={activ} />
     </label>
-    <button type="submit">Add Ghiseu</button>
+    <button type="submit">Salveaza</button>
 </form>
 
 <style>

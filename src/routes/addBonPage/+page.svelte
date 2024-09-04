@@ -104,7 +104,7 @@
 </script>
 
 <form on:submit={handleSubmit}>
-    <h1>Add New Bon</h1>
+    <h1>Adauga un bon:</h1>
     <div class="button-container">
         <button type="button" class="top-button">Persoana Fizica</button>
         <button type="button" class="top-button">Persoana Juridica</button>
@@ -144,7 +144,7 @@
         Modified At:
         <input type="text" value={modifiedAt} readonly />
     </label>
-    <button type="submit">Add Bon</button>
+    <button type="submit">Salveaza</button>
 </form>
 
 <style>

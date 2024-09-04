@@ -83,7 +83,7 @@
 </script>
 
 <form on:submit={handleSubmit}>
-    <h1>Edit Ghiseu</h1>
+    <h1>Modifica ghiseu:</h1>
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
@@ -111,7 +111,7 @@
             Icon:
             <input type="text" bind:value={icon} required />
         </label>
-        <button type="submit">Update Ghiseu</button>
+        <button type="submit">Salveaza</button>
     {/if}
 </form>
 
