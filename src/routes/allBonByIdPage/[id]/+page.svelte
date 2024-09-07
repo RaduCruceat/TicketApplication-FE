@@ -74,7 +74,6 @@
         <table>
             <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Id Ghiseu</th>
                     <th>Data Creari</th>
                     <th>Data ultimei modificari</th>
@@ -85,7 +84,6 @@
             <tbody>
                 {#each bons as bon}
                     <tr>
-                        <td>{bon.id}</td>
                         <td>{bon.idGhiseu}</td>
                         <td>{new Date(bon.createdAt).toLocaleString()}</td>
                         <td>{new Date(bon.modifiedAt).toLocaleString()}</td>

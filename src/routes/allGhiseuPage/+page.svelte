@@ -4,6 +4,8 @@
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import { goto } from '$app/navigation'; // Import navigation function
     import Toast from '$lib/SvelteComponents/Toast.svelte';
+    import Checkmark from '$lib/SvelteComponents/Checkmark.svelte';
+    let isChecked = false;
 
     let ghiseuList: GhiseuID[] = [];
     let errorMessage: string = '';
@@ -52,6 +54,7 @@
         try {
             const response = await fetch(url, { method: 'PUT' });
             if (response.ok) {
+               
                 fetchData(); // Refresh the data after updating the status
             } else {
                 console.error('Failed to update status');
@@ -61,11 +64,11 @@
         }
     }
 
-    function handleChange(event: Event, id: number) {
-        const selectElement = event.target as HTMLSelectElement;
-        const newStatus = selectElement.value;
-        changeStatus(id, newStatus);
-    }
+
+    function handleChange1(id: number, newStatus: string) {
+    console.log("Changing status for ID:", id, "New Status:", newStatus);
+    changeStatus(id, newStatus);
+}
 
     function handleActionChange(event: Event, id: number, denumire: string) {
     const selectElement = event.target as HTMLSelectElement;
@@ -118,41 +121,33 @@ async function deleteGhiseu(): Promise<void> {
         <p>{errorMessage}</p>
     </div>
 {:else}
+    <h1>Pagina Ghisee</h1>
     <div class="table-container">
         <button class="add-button" on:click={navigateToAddGhiseuPage}>Add New Ghiseu</button>
         <table>
             <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Icon</th>
+                <tr>      
+                    <th>Cod</th>    
                     <th>Denumire</th>
-                    <th>Cod</th>
                     <th>Descriere</th>
                     <th>Activ</th>
-                    <th>Schimba Starea</th>
                     <th>Actiuni</th> <!-- New column header -->
                 </tr>
             </thead>
             <tbody>
                 {#each ghiseuList as ghiseu}
                     <tr>
-                        <td>{ghiseu.id}</td>
-                        <td>{ghiseu.icon}</td>
-                        <td>{ghiseu.denumire}</td>
                         <td>{ghiseu.cod}</td>
+                        <td>{ghiseu.icon} {ghiseu.denumire}</td>
                         <td>{ghiseu.descriere}</td>
-                        <td style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">
-                            {ghiseu.activ ? 'Da' : 'Nu'}
+                        <td class="checkmark-cell" style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">     
+                            <Checkmark
+                            checked={ghiseu.activ}
+                           on:click={() => handleChange1(ghiseu.id, ghiseu.activ ? 'inactive' : 'active')}
+                          />
                         </td>
-                        <td>
-                            <select
-                                on:change={(e) => handleChange(e, ghiseu.id)}
-                                value={ghiseu.activ ? 'active' : 'inactive'}
-                            >
-                                <option value="active">Activa</option>
-                                <option value="inactive">Inactiva</option>
-                            </select>
-                        </td>
+                     
+                       
                         <td>
                                 <select on:change={(e) => handleActionChange(e, ghiseu.id, ghiseu.denumire)}>
                                     <option value="">Selecteaza actiunea</option>
@@ -169,6 +164,13 @@ async function deleteGhiseu(): Promise<void> {
 {/if}
 
 <style>
+
+.checkmark-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
     .error {
         color: red;
         font-weight: bold;

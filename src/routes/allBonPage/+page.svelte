@@ -67,12 +67,12 @@
         <p>{errorMessage}</p>
     </div>
 {:else}
+<h1>Pagina Bonuri</h1>
 <div class="table-container">
     <button class="add-button" on:click={navigateToAddBonPage}>Add New Bon</button>
     <table>
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Id Ghiseu</th>
                 <th>Data Creari</th>
                 <th>Data ultimei modificari</th>
@@ -83,7 +83,6 @@
         <tbody>
             {#each bonList as bon}
                 <tr>
-                    <td>{bon.id}</td>
                     <td>{bon.idGhiseu}</td>
                     <td>{new Date(bon.createdAt).toLocaleString()}</td>
                     <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
