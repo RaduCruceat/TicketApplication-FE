@@ -28,6 +28,11 @@ export interface BonID {
     stare: number; 
     createdAt: string; 
     modifiedAt: string; 
+    ghiseu?: {
+        id: number;
+        denumire: string;
+        icon: string;
+    };
 }
 
 export interface Bon {

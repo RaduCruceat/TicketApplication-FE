@@ -32,31 +32,41 @@
     }
 }
 
-    async function fetchData(): Promise<void> {
-        try {
-            const response = await fetch('https://localhost:7140/Bon/GetAll'); // Update with the actual API endpoint
-            if (response.ok) {
-                const data: ApiResponse = await response.json();
-                if (data.isSuccess) {
-                    bonList = Array.isArray(data.result) ? data.result : [];
-                    errorMessage = ''; // Clear any previous errors
-                } else {
-                    errorMessage = data.errorMessage || 'An unknown error occurred';
-                    bonList = []; // Clear previous data if there's an error
-                }
+async function fetchData(): Promise<void> {
+    try {
+        const [bonResponse, ghiseuResponse] = await Promise.all([
+            fetch('https://localhost:7140/Bon/GetAll'),
+            fetch('https://localhost:7140/Ghiseu/GetAll') // Adjust this URL to your actual endpoint
+        ]);
+
+        if (bonResponse.ok && ghiseuResponse.ok) {
+            const bonData: ApiResponse = await bonResponse.json();
+            const ghiseuData: ApiResponse = await ghiseuResponse.json();
+
+            if (bonData.isSuccess && ghiseuData.isSuccess) {
+                const ghiseuMap = new Map(ghiseuData.result.map(g => [g.id, g]));
+                bonList = Array.isArray(bonData.result) ? bonData.result.map(bon => ({
+                    ...bon,
+                    ghiseu: ghiseuMap.get(bon.idGhiseu)
+                })) : [];
+                errorMessage = '';
             } else {
-                errorMessage = 'Failed to fetch data from the server';
+                errorMessage = bonData.errorMessage || ghiseuData.errorMessage || 'An unknown error occurred';
                 bonList = [];
             }
-        } catch (error) {
-            if (error instanceof Error) {
-                errorMessage = 'Error: ' + error.message;
-            } else {
-                errorMessage = 'An unknown error occurred';
-            }
+        } else {
+            errorMessage = 'Failed to fetch data from the server';
             bonList = [];
         }
+    } catch (error) {
+        if (error instanceof Error) {
+            errorMessage = 'Error: ' + error.message;
+        } else {
+            errorMessage = 'An unknown error occurred';
+        }
+        bonList = [];
     }
+}
 
     onMount(fetchData);
 </script>
@@ -74,6 +84,7 @@
         <thead>
             <tr>
                 <th>Id Ghiseu</th>
+                <th>Denumire</th>
                 <th>Data Creari</th>
                 <th>Data ultimei modificari</th>
                 <th>Stare</th>
@@ -84,6 +95,16 @@
             {#each bonList as bon}
                 <tr>
                     <td>{bon.idGhiseu}</td>
+                    <td>
+                        {#if bon.ghiseu}
+                            {#if bon.ghiseu.icon}
+                                <img src={bon.ghiseu.icon} alt={bon.ghiseu.denumire} style="max-width: 20px; max-height: 20px; vertical-align: middle; margin-right: 5px;" />
+                            {/if}
+                            {bon.ghiseu.denumire}
+                        {:else}
+                            N/A
+                        {/if}
+                    </td>
                     <td>{new Date(bon.createdAt).toLocaleString('ro-RO', 
                     {
                         year: 'numeric',

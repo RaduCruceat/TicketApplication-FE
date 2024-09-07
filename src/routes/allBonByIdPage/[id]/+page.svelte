@@ -33,22 +33,36 @@
 
     async function fetchBons(): Promise<void> {
     try {
-        const response = await fetch(`https://localhost:7140/Bon/GetAll/${id}`);
-        console.log('Response status:', response.status); // Debugging log
-        if (response.ok) {
-            const data: ApiResponse = await response.json();
-            console.log('Response data:', data); // Debugging log
-            if (data.isSuccess) {
-                bons = Array.isArray(data.result) ? data.result : [];
+        // Fetch data from both endpoints
+        const [bonResponse, ghiseuResponse] = await Promise.all([
+            fetch(`https://localhost:7140/Bon/GetAll/${id}`),
+            fetch('https://localhost:7140/Ghiseu/GetAll') // Adjust this URL to your actual endpoint
+        ]);
+
+        if (bonResponse.ok && ghiseuResponse.ok) {
+            // Parse the JSON data from both responses
+            const bonData: ApiResponse = await bonResponse.json();
+            const ghiseuData: ApiResponse = await ghiseuResponse.json();
+
+            if (bonData.isSuccess && ghiseuData.isSuccess) {
+                // Create a map of ghiseu data for quick lookup
+                const ghiseuMap = new Map(ghiseuData.result.map(g => [g.id, g]));
+
+                // Map bon data to include corresponding ghiseu
+                bons = Array.isArray(bonData.result) ? bonData.result.map(bon => ({
+                    ...bon,
+                    ghiseu: ghiseuMap.get(bon.idGhiseu)
+                })) : [];
                 errorMessage = ''; // Clear any previous errors
             } else {
-                errorMessage = data.errorMessage || 'An unknown error occurred';
+                errorMessage = bonData.errorMessage || ghiseuData.errorMessage || 'An unknown error occurred';
                 bons = []; // Clear previous data if there's an error
             }
         } else {
-            // Attempt to parse error details from the response
-            const errorData = await response.json();
-            errorMessage = errorData.errorMessage || `Failed to fetch data from the server. Status: ${response.status}`;
+            // Attempt to parse error details from the responses
+            const bonErrorData = await bonResponse.json();
+            const ghiseuErrorData = await ghiseuResponse.json();
+            errorMessage = bonErrorData.errorMessage || ghiseuErrorData.errorMessage || 'Failed to fetch data from the server';
             bons = [];
         }
     } catch (error) {
@@ -75,6 +89,7 @@
             <thead>
                 <tr>
                     <th>Id Ghiseu</th>
+                    <th>Denumire</th>
                     <th>Data Creari</th>
                     <th>Data ultimei modificari</th>
                     <th>Stare</th>
@@ -85,6 +100,16 @@
                 {#each bons as bon}
                     <tr>
                         <td>{bon.idGhiseu}</td>
+                        <td>
+                            {#if bon.ghiseu}
+                                {#if bon.ghiseu.icon}
+                                    <img src={bon.ghiseu.icon} alt={bon.ghiseu.denumire} style="max-width: 20px; max-height: 20px; vertical-align: middle; margin-right: 5px;" />
+                                {/if}
+                                {bon.ghiseu.denumire}
+                            {:else}
+                                N/A
+                            {/if}
+                        </td>
                         <td>{new Date(bon.createdAt).toLocaleString()}</td>
                         <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
                         <td style="background-color: {bon.stare === 0 ? 'lightgreen' : bon.stare === 1 ? 'lightyellow' : 'lightcoral'};">
