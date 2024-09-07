@@ -88,7 +88,7 @@
                         <td>{new Date(bon.createdAt).toLocaleString()}</td>
                         <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
                         <td style="background-color: {bon.stare === 0 ? 'lightgreen' : bon.stare === 1 ? 'lightyellow' : 'lightcoral'};">
-                            {bon.stare === 0 ? 'InCursDePreluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                            {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                         </td>
                         <td>
                             <select on:change={handleStatusChange} value={bon.stare}>

@@ -84,10 +84,26 @@
             {#each bonList as bon}
                 <tr>
                     <td>{bon.idGhiseu}</td>
-                    <td>{new Date(bon.createdAt).toLocaleString()}</td>
-                    <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
+                    <td>{new Date(bon.createdAt).toLocaleString('ro-RO', 
+                    {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}
+                    </td>
+                    <td>{new Date(bon.modifiedAt).toLocaleString('ro-RO', 
+                    {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                    })}
+                   </td>
                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
-                        {bon.stare === 0 ? 'InCursDePreluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                        {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                     </td>
                     <td>
                         <select on:change={(e) => handleStatusChange(e, bon.id)} value={bon.stare}>
