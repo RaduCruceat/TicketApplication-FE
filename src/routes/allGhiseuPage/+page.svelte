@@ -138,8 +138,14 @@ async function deleteGhiseu(): Promise<void> {
                 {#each ghiseuList as ghiseu}
                     <tr>
                         <td>{ghiseu.cod}</td>
-                        <td>{ghiseu.icon} {ghiseu.denumire}</td>
+                        <td>
+                            {#if ghiseu.icon}
+                                <img src={ghiseu.icon} alt={ghiseu.denumire} style="max-width: 20px; max-height: 20px;" />
+                            {/if}
+                            {ghiseu.denumire}
+                        </td>
                         <td>{ghiseu.descriere}</td>
+                       
                         <td class="checkmark-cell" style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">     
                             <Checkmark
                             checked={ghiseu.activ}

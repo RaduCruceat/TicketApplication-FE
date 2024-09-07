@@ -15,27 +15,18 @@
 
     async function fetchIcons() {
     try {
-        const response = await fetch('https://localhost:7140/Ghiseu/GetIcons');
+        const response = await fetch('/icons.json'); // Fetch the list of icons
         if (response.ok) {
-            const data = await response.json();
-            console.log('Fetched Icons:', data); // Debug: Log the fetched data
-
-            if (data.isSuccess && Array.isArray(data.result)) {
-                availableIcons = data.result;
-            } else {
-                console.error('Unexpected data format:', data);
-                availableIcons = []; // Ensure it's an empty array if data format is wrong
-            }
+            const icons: string[] = await response.json();
+            availableIcons = icons; // Update availableIcons with the fetched list
         } else {
-            console.error('Failed to fetch icons:', response.statusText);
-            availableIcons = []; // Fallback to an empty array
+            throw new Error('Failed to fetch icons');
         }
     } catch (error) {
         console.error('Error fetching icons:', error);
-        availableIcons = []; // Fallback to an empty array
+        // Handle error appropriately
     }
 }
-
 
     function validateForm(): boolean {
         if (!cod.trim() || !denumire.trim() || !descriere.trim() || !icon.trim()) {
@@ -121,7 +112,7 @@
         <select bind:value={icon} required>
             <option value="" disabled>Select an icon</option>
             {#each availableIcons as iconFile}
-                <option value={iconFile}>{iconFile}</option>
+                <option value={`${iconFile}`}>{iconFile}</option>
             {/each}
         </select>
     </label>
