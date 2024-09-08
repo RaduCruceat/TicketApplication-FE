@@ -3,6 +3,7 @@
     import type { BonID, ApiResponse } from '$lib/ObjectsList/types'; // Import the TypeScript types
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import { goto } from '$app/navigation'; // Import navigation function
+    import { HostLink } from '$lib/ApiFile/configApi';
 
     let bonList: BonID[] = [];
     let errorMessage: string = '';
@@ -15,10 +16,10 @@
     const selectElement = event.target as HTMLSelectElement;
     const newStatus = selectElement.value;
     const url = newStatus === 'InCursDePreluare'
-        ? `https://localhost:7140/Bon/MarkAsInProgress/${id}`
+        ? `${HostLink}/Bon/MarkAsInProgress/${id}`
         : newStatus === 'Preluat'
-        ? `https://localhost:7140/Bon/MarkAsReceived/${id}`
-        : `https://localhost:7140/Bon/MarkAsClose/${id}`;
+        ? `${HostLink}/Bon/MarkAsReceived/${id}`
+        : `${HostLink}/Bon/MarkAsClose/${id}`;
 
     try {
         const response = await fetch(url, { method: 'PUT' });
@@ -35,8 +36,8 @@
 async function fetchData(): Promise<void> {
     try {
         const [bonResponse, ghiseuResponse] = await Promise.all([
-            fetch('https://localhost:7140/Bon/GetAll'),
-            fetch('https://localhost:7140/Ghiseu/GetAll') // Adjust this URL to your actual endpoint
+            fetch(`${HostLink}/Bon/GetAll`),
+            fetch(`${HostLink}/Ghiseu/GetAll`) // Adjust this URL to your actual endpoint
         ]);
 
         if (bonResponse.ok && ghiseuResponse.ok) {

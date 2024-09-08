@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import type { EditGhiseu } from '$lib/ObjectsList/types'; 
+    import { HostLink } from '$lib/ApiFile/configApi';
 
     let id: string;
     $: id = $page.params.id;
@@ -17,7 +18,7 @@
 
     async function fetchGhiseuData(id: string): Promise<void> {
         try {
-            const response = await fetch(`https://localhost:7140/Ghiseu/Get/${id}`);
+            const response = await fetch(`${HostLink}/Ghiseu/Get/${id}`);
             const data = await response.json();
             
             if (response.ok && data.isSuccess) {
@@ -49,7 +50,7 @@
         };
 
         try {
-            const response = await fetch(`https://localhost:7140/Ghiseu/Edit/${id}`, {
+            const response = await fetch(`${HostLink}/Ghiseu/Edit/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'

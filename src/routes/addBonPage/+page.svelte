@@ -4,6 +4,7 @@
     import type { Bon } from '$lib/ObjectsList/types'; // Import the Bon type
     import type { GhiseuID } from '$lib/ObjectsList/types'; // Import the Ghiseu type
     import  { StareEnum } from '$lib/ObjectsList/types'; // Import the Bon type
+    import { HostLink } from '$lib/ApiFile/configApi';
 
     let ghiseuList: GhiseuID[] = [];
     let selectedIdGhiseu: number | null = null;
@@ -16,7 +17,7 @@
 
     async function fetchGhiseuList(): Promise<void> {
         try {
-            const response = await fetch('https://localhost:7140/Ghiseu/GetAll');
+            const response = await fetch(`${HostLink}/Ghiseu/GetAll`);
             if (response.ok) {
                 const data = await response.json();
                 if (data.isSuccess) {
@@ -69,7 +70,7 @@
         };
 
         try {
-            const response = await fetch('https://localhost:7140/Bon/Add', {
+            const response = await fetch(`${HostLink}/Bon/Add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

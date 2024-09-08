@@ -5,6 +5,8 @@
     import { goto } from '$app/navigation'; // Import navigation function
     import Toast from '$lib/SvelteComponents/Toast.svelte';
     import Checkmark from '$lib/SvelteComponents/Checkmark.svelte';
+    import { HostLink } from '$lib/ApiFile/configApi';
+
     let isChecked = false;
 
     let ghiseuList: GhiseuID[] = [];
@@ -21,7 +23,7 @@
 
     async function fetchData(): Promise<void> {
         try {
-            const response = await fetch('https://localhost:7140/Ghiseu/GetAll');
+            const response = await fetch(`${HostLink}/Ghiseu/GetAll`);
             if (response.ok) {
                 const data: ApiResponse = await response.json();
 
@@ -48,8 +50,8 @@
 
     async function changeStatus(id: number, newStatus: string): Promise<void> {
         const url = newStatus === 'active'
-            ? `https://localhost:7140/Ghiseu/MarkAsActive/${id}`
-            : `https://localhost:7140/Ghiseu/MarkAsInactive/${id}`;
+            ? `${HostLink}/Ghiseu/MarkAsActive/${id}`
+            : `${HostLink}/Ghiseu/MarkAsInactive/${id}`;
 
         try {
             const response = await fetch(url, { method: 'PUT' });
@@ -90,7 +92,7 @@
 
 async function deleteGhiseu(): Promise<void> {
     if (selectedGhiseuId !== null) {
-        const url = `https://localhost:7140/Ghiseu/Delete/${selectedGhiseuId}`;
+        const url = `${HostLink}/Ghiseu/Delete/${selectedGhiseuId}`;
 
         try {
             const response = await fetch(url, { method: 'DELETE' });

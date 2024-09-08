@@ -17,5 +17,6 @@ const config = {
 		adapter: adapter()
 	}
 };
+export const API_BASE_URL = 'https://localhost:7140';
 
 export default config;

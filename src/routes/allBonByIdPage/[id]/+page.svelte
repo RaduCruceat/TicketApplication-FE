@@ -3,6 +3,7 @@
     import { page } from '$app/stores'; // To access the current route's parameters
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import type { BonID, ApiResponse } from '$lib/ObjectsList/types'; // Adjust the path as needed
+    import { HostLink } from '$lib/ApiFile/configApi';
 
     let bons: BonID[] = [];
     let errorMessage: string = '';
@@ -10,33 +11,34 @@
     // Fetching the ID from the URL
     $: id = $page.params.id;
 
-    async function handleStatusChange(event: Event): Promise<void> {
-        const selectElement = event.target as HTMLSelectElement;
-        const newStatus = selectElement.value;
-        const url = newStatus === 'InCursDePreluare'
-            ? `https://localhost:7140/Bon/MarkAsInProgress/${id}`
-            : newStatus === 'Preluat'
-            ? `https://localhost:7140/Bon/MarkAsReceived/${id}`
-            : `https://localhost:7140/Bon/MarkAsClose/${id}`;
+    async function handleStatusChange(event: Event, idBon: number): Promise<void> {
+    const selectElement = event.target as HTMLSelectElement;
+    const newStatus = selectElement.value;
+    console.log(newStatus);
+    const url = newStatus === 'InCursDePreluare'
+        ? `${HostLink}/Bon/MarkAsInProgress/${idBon}`
+        : newStatus === 'Preluat'
+        ? `${HostLink}/Bon/MarkAsReceived/${idBon}`
+        : `${HostLink}/Bon/MarkAsClose/${idBon}`;
 
-        try {
-            const response = await fetch(url, { method: 'PUT' });
-            if (response.ok) {
-                fetchBons(); // Refresh the data after updating the status
-            } else {
-                console.error('Failed to update status', response.status);
-            }
-        } catch (error) {
-            console.error('Error updating status:', error);
+    try {
+        const response = await fetch(url, { method: 'PUT' });
+        if (response.ok) {
+            fetchBons(); // Refresh the data after updating the status
+        } else {
+            console.error('Failed to update status');
         }
+    } catch (error) {
+        console.error('Error updating status:', error);
     }
+}
 
     async function fetchBons(): Promise<void> {
     try {
         // Fetch data from both endpoints
         const [bonResponse, ghiseuResponse] = await Promise.all([
-            fetch(`https://localhost:7140/Bon/GetAll/${id}`),
-            fetch('https://localhost:7140/Ghiseu/GetAll') // Adjust this URL to your actual endpoint
+            fetch(`${HostLink}/Bon/GetAll/${id}`),
+            fetch(`${HostLink}/Ghiseu/GetAll`)  // Adjust this URL to your actual endpoint
         ]);
 
         if (bonResponse.ok && ghiseuResponse.ok) {
@@ -110,16 +112,32 @@
                                 N/A
                             {/if}
                         </td>
-                        <td>{new Date(bon.createdAt).toLocaleString()}</td>
-                        <td>{new Date(bon.modifiedAt).toLocaleString()}</td>
-                        <td style="background-color: {bon.stare === 0 ? 'lightgreen' : bon.stare === 1 ? 'lightyellow' : 'lightcoral'};">
+                        <td>{new Date(bon.createdAt).toLocaleString('ro-RO', 
+                            {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                            </td>
+                            <td>{new Date(bon.modifiedAt).toLocaleString('ro-RO', 
+                            {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                            })}
+                           </td>
+                        <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
                             {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                         </td>
                         <td>
-                            <select on:change={handleStatusChange} value={bon.stare}>
-                                <option value="0">In Curs De Preluare</option>
-                                <option value="1">Preluat</option>
-                                <option value="2">Inchis</option>
+                            <select on:change={(event) => handleStatusChange(event, bon.id)} value={bon.stare}>
+                                <option value="InCursDePreluare">In Curs De Preluare</option>
+                                <option value="Preluat">Preluat</option>
+                                <option value="Inchis">Inchis</option>
                             </select>
                         </td>
                     </tr>

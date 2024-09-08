@@ -2,6 +2,7 @@
     import { goto } from '$app/navigation'; 
     import type { Ghiseu } from '$lib/ObjectsList/types'; 
     import { onMount } from 'svelte';
+    import { HostLink } from '$lib/ApiFile/configApi';
 
     let cod: string = '';
     let denumire: string = '';
@@ -53,7 +54,7 @@
         };
 
         try {
-            const response = await fetch('https://localhost:7140/Ghiseu/Add', {
+            const response = await fetch(`${HostLink}/Ghiseu/Add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
