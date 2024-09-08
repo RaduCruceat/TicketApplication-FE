@@ -73,9 +73,14 @@
     }
 }
 
-    async function handleStatusChange(event: Event, idBon: number): Promise<void> {
+async function handleStatusChange(event: Event, idBon: number): Promise<void> {
     const selectElement = event.target as HTMLSelectElement;
     const newStatus = selectElement.value;
+
+    // If the selected value is "Schimba Starea", do nothing
+    if (newStatus === 'Schimba Starea') {
+        return;
+    }
     
     const url = newStatus === 'InCursDePreluare'
         ? `${HostLink}/Bon/MarkAsInProgress/${idBon}`
@@ -87,8 +92,9 @@
         const response = await fetch(url, { method: 'PUT' });
         if (response.ok) {
             await fetchData(); // Refresh the data after updating the status
-            if(selectedGhiseuId)
-            await fetchBons(selectedGhiseuId);
+            if (selectedGhiseuId) {
+                await fetchBons(selectedGhiseuId);
+            }
         } else {
             console.error('Failed to update status');
         }
@@ -270,7 +276,7 @@
                                     </td>
                                     <td>
                                         <select on:change={(event) => handleStatusChange(event, bon.id)} style="width: 150px; text-align: center; text-align-last: center;">
-                                            <option disabled selected>Schimba Starea</option>
+                                            <option value="Schimba Starea" selected>Schimba Starea</option>
                                             {#if bon.stare !== 0}
                                                 <option value="InCursDePreluare">In Curs De Preluare</option>
                                             {/if}
