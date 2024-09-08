@@ -80,16 +80,16 @@ async function fetchData(): Promise<void> {
 {:else}
 <h1>Pagina Bonuri</h1>
 <div class="table-container">
-    <button class="add-button" on:click={navigateToAddBonPage}>Add New Bon</button>
+    <button class="add-button" on:click={navigateToAddBonPage}>Adauga Bon</button>
     <table>
         <thead>
             <tr>
                 <th>Id Ghiseu</th>
-                <th>Denumire</th>
+                <th>Ghiseu</th>
                 <th>Data Creari</th>
                 <th>Data ultimei modificari</th>
                 <th>Stare</th>
-                <th>Schimba Starea</th>
+                <th>Actiuni pentru stare</th>
             </tr>
         </thead>
         <tbody>
@@ -127,13 +127,23 @@ async function fetchData(): Promise<void> {
                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
                         {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                     </td>
-                    <td>
-                        <select on:change={(e) => handleStatusChange(e, bon.id)} value={bon.stare}>
-                            <option value="InCursDePreluare">In Curs De Preluare</option>
-                            <option value="Preluat">Preluat</option>
-                            <option value="Inchis">Inchis</option>
-                        </select>
-                    </td>
+                   <td>
+    <select on:change={(event) => handleStatusChange(event, bon.id)} style="width: 150px; text-align: center; text-align-last: center;">
+        <option disabled selected>Schimba Starea</option> <!-- Placeholder option -->
+        
+        {#if bon.stare !== 0}
+            <option value="InCursDePreluare">In Curs De Preluare</option>
+        {/if}
+        {#if bon.stare !== 1}
+            <option value="Preluat">Preluat</option>
+        {/if}
+        {#if bon.stare !== 2}
+            <option value="Inchis">Inchis</option>
+        {/if}
+    </select>
+</td>
+
+                    
                 </tr>
             {/each}
         </tbody>

@@ -125,7 +125,7 @@ async function deleteGhiseu(): Promise<void> {
 {:else}
     <h1>Pagina Ghisee</h1>
     <div class="table-container">
-        <button class="add-button" on:click={navigateToAddGhiseuPage}>Add New Ghiseu</button>
+        <button class="add-button" on:click={navigateToAddGhiseuPage}>Adauga Ghiseu</button>
         <table>
             <thead>
                 <tr>      

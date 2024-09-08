@@ -14,7 +14,7 @@
     async function handleStatusChange(event: Event, idBon: number): Promise<void> {
     const selectElement = event.target as HTMLSelectElement;
     const newStatus = selectElement.value;
-    console.log(newStatus);
+    
     const url = newStatus === 'InCursDePreluare'
         ? `${HostLink}/Bon/MarkAsInProgress/${idBon}`
         : newStatus === 'Preluat'
@@ -33,12 +33,12 @@
     }
 }
 
-    async function fetchBons(): Promise<void> {
+async function fetchBons(): Promise<void> {
     try {
-        // Fetch data from both endpoints
+        // Fetch data for the specific bon and ghiseu based on the current ID
         const [bonResponse, ghiseuResponse] = await Promise.all([
-            fetch(`${HostLink}/Bon/GetAll/${id}`),
-            fetch(`${HostLink}/Ghiseu/GetAll`)  // Adjust this URL to your actual endpoint
+            fetch(`${HostLink}/Bon/GetAll/${id}`),  // Fetch bons for the specific ghiseu ID
+            fetch(`${HostLink}/Ghiseu/Get/${id}`)   // Fetch the specific ghiseu by ID
         ]);
 
         if (bonResponse.ok && ghiseuResponse.ok) {
@@ -47,14 +47,15 @@
             const ghiseuData: ApiResponse = await ghiseuResponse.json();
 
             if (bonData.isSuccess && ghiseuData.isSuccess) {
-                // Create a map of ghiseu data for quick lookup
-                const ghiseuMap = new Map(ghiseuData.result.map(g => [g.id, g]));
+                // Since we're fetching a single ghiseu, no need to create a map
+                const ghiseu = ghiseuData.result;
 
-                // Map bon data to include corresponding ghiseu
+                // Map bon data to include the single ghiseu
                 bons = Array.isArray(bonData.result) ? bonData.result.map(bon => ({
                     ...bon,
-                    ghiseu: ghiseuMap.get(bon.idGhiseu)
+                    ghiseu: ghiseu  // Directly assign the fetched ghiseu object to each bon
                 })) : [];
+
                 errorMessage = ''; // Clear any previous errors
             } else {
                 errorMessage = bonData.errorMessage || ghiseuData.errorMessage || 'An unknown error occurred';
@@ -76,6 +77,7 @@
         bons = [];
     }
 }
+
     onMount(fetchBons);
 </script>
 
@@ -91,11 +93,11 @@
             <thead>
                 <tr>
                     <th>Id Ghiseu</th>
-                    <th>Denumire</th>
+                    <th>Ghiseu</th>
                     <th>Data Creari</th>
                     <th>Data ultimei modificari</th>
                     <th>Stare</th>
-                    <th>Schimba Starea</th>
+                    <th>Actiuni pentru stare </th>
                 </tr>
             </thead>
             <tbody>
@@ -134,12 +136,22 @@
                             {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                         </td>
                         <td>
-                            <select on:change={(event) => handleStatusChange(event, bon.id)} value={bon.stare}>
-                                <option value="InCursDePreluare">In Curs De Preluare</option>
-                                <option value="Preluat">Preluat</option>
-                                <option value="Inchis">Inchis</option>
+                            <select on:change={(event) => handleStatusChange(event, bon.id)} style="width: 150px; text-align: center; text-align-last: center;">
+                                <option disabled selected>Schimba Starea</option> <!-- Placeholder option -->
+                                
+                                {#if bon.stare !== 0}
+                                    <option value="InCursDePreluare">In Curs De Preluare</option>
+                                {/if}
+                                {#if bon.stare !== 1}
+                                    <option value="Preluat">Preluat</option>
+                                {/if}
+                                {#if bon.stare !== 2}
+                                    <option value="Inchis">Inchis</option>
+                                {/if}
                             </select>
                         </td>
+                        
+                        
                     </tr>
                 {/each}
             </tbody>
