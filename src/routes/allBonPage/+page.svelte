@@ -3,8 +3,9 @@
     import type { BonID, ApiResponse } from '$lib/ObjectsList/types'; // Import the TypeScript types
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import { goto } from '$app/navigation'; // Import navigation function
-    import { HostLink } from '$lib/ApiFile/configApi';
-
+    export let data: { secretLink: string };
+    let HostLink=data.secretLink;
+   
     let bonList: BonID[] = [];
     let errorMessage: string = '';
 

@@ -5,8 +5,8 @@
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import Toast from '$lib/SvelteComponents/Toast.svelte';
     import Checkmark from '$lib/SvelteComponents/Checkmark.svelte';
-    import { HostLink } from '$lib/ApiFile/configApi';
-
+    export let data: { secretLink: string };
+    let HostLink=data.secretLink;
     let isChecked = false;
 
     let ghiseuList: GhiseuID[] = [];

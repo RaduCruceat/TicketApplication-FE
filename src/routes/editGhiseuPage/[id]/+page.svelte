@@ -3,7 +3,8 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import type { EditGhiseu } from '$lib/ObjectsList/types'; 
-    import { HostLink } from '$lib/ApiFile/configApi';
+    export let data: { secretLink: string };
+    let HostLink=data.secretLink;
 
     let id: string;
     $: id = $page.params.id;

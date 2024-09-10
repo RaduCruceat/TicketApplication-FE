@@ -20,6 +20,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@zerodevx/svelte-toast": "^0.9.5"
+		"@zerodevx/svelte-toast": "^0.9.5",
+		"dotenv": "^16.4.5"
 	}
 }

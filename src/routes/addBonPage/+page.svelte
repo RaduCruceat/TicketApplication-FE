@@ -4,8 +4,9 @@
     import type { Bon } from '$lib/ObjectsList/types'; // Import the Bon type
     import type { GhiseuID } from '$lib/ObjectsList/types'; // Import the Ghiseu type
     import  { StareEnum } from '$lib/ObjectsList/types'; // Import the Bon type
-    import { HostLink } from '$lib/ApiFile/configApi';
-
+    export let data: { secretLink: string };
+    let HostLink=data.secretLink;
+    
     let ghiseuList: GhiseuID[] = [];
     let selectedIdGhiseu: number | null = null;
     let stare: StareEnum = StareEnum.InCursDePreluare;

@@ -1,1 +1,0 @@
-export const HostLink = 'https://localhost:7140';

@@ -2,7 +2,8 @@
     import { goto } from '$app/navigation'; 
     import type { Ghiseu } from '$lib/ObjectsList/types'; 
     import { onMount } from 'svelte';
-    import { HostLink } from '$lib/ApiFile/configApi';
+    export let data: { secretLink: string };
+    let HostLink=data.secretLink;
 
     let cod: string = '';
     let denumire: string = '';
