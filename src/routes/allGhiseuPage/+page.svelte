@@ -5,10 +5,12 @@
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import Toast from '$lib/SvelteComponents/Toast.svelte';
     import Checkmark from '$lib/SvelteComponents/Checkmark.svelte';
+    import { page } from '$app/stores';
+    import { get } from 'svelte/store';
     export let data: { secretLink: string };
     let HostLink=data.secretLink;
     let isChecked = false;
-
+    
     let ghiseuList: GhiseuID[] = [];
     let bons: BonID[] = [];
     let errorMessage: string = '';
@@ -162,7 +164,16 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
         selectedGhiseuId = null;
     }
 
-    onMount(fetchData);
+    onMount(() => {
+     fetchData();
+    const params = get(page).url.searchParams;
+    const ghiseuIdParam = params.get('ghiseuId');
+    if (ghiseuIdParam) {
+        selectedGhiseuId = parseInt(ghiseuIdParam, 10);
+        fetchBons(selectedGhiseuId); // Automatically fetch Bons for the selected Ghiseu
+    } // Fetch all Ghiseu data if no specific Ghiseu is selected
+    
+});
 </script>
 
 {#if showToast}
@@ -223,10 +234,11 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
             </table>
         </div>
 
-        {#if selectedGhiseuId !== null}
-            <div class="bon-container">
-                <h1>Bonurile pt. ghiseul cu id-ul: {selectedGhiseuId}</h1>
-                <button class="add-button"  on:click={() => goto('/addBonPage')}>Adauga Bon</button>
+        <div class="bon-container">
+            <h1>{selectedGhiseuId !== null ? `Bonurile pt. ghiseul cu id-ul: ${selectedGhiseuId}` : 'Niciun ghiseu selectat'}</h1>
+            <button class="add-button" on:click={() => goto('/addBonPage')}>Adauga Bon</button>
+        
+            {#if selectedGhiseuId !== null}
                 {#if errorMessage && bons.length === 0}
                     <div class="error">
                         <p>{errorMessage}</p>
@@ -235,18 +247,16 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                     <table>
                         <thead>
                             <tr>
-                                <th>Id Ghiseu</th>
                                 <th>Ghiseu</th>
                                 <th>Data Creari</th>
                                 <th>Data ultimei modificari</th>
                                 <th>Stare</th>
-                                <th>Actiuni pentru stare </th>
+                                <th>Actiuni pentru stare</th>
                             </tr>
                         </thead>
                         <tbody>
                             {#each bons as bon}
                                 <tr>
-                                    <td>{bon.idGhiseu}</td>
                                     <td>
                                         {#if bon.ghiseu}
                                             {#if bon.ghiseu.icon}
@@ -293,8 +303,9 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                         </tbody>
                     </table>
                 {/if}
-            </div>
-        {/if}
+            {/if}
+        </div>
+        
     </div>
 {/if}
 

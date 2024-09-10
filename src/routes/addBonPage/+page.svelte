@@ -6,7 +6,7 @@
     import  { StareEnum } from '$lib/ObjectsList/types'; // Import the Bon type
     export let data: { secretLink: string };
     let HostLink=data.secretLink;
-    
+
     let ghiseuList: GhiseuID[] = [];
     let selectedIdGhiseu: number | null = null;
     let stare: StareEnum = StareEnum.InCursDePreluare;
@@ -83,7 +83,7 @@
                 successMessage = 'Bon added successfully!';
                 errorMessage = '';
                 // Optionally, you can navigate to another page or reset the form
-                goto('/allBonPage'); // Navigate to the allBonPage or another page
+               goto(`/allGhiseuPage?ghiseuId=${selectedIdGhiseu}`); // Navigate to the allBonPage or another page
             } else {
                 const data = await response.json();
                 errorMessage = data.errorMessage || 'Failed to add Bon';

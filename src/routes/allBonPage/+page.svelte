@@ -85,7 +85,6 @@ async function fetchData(): Promise<void> {
     <table>
         <thead>
             <tr>
-                <th>Id Ghiseu</th>
                 <th>Ghiseu</th>
                 <th>Data Creari</th>
                 <th>Data ultimei modificari</th>
@@ -96,7 +95,6 @@ async function fetchData(): Promise<void> {
         <tbody>
             {#each bonList as bon}
                 <tr>
-                    <td>{bon.idGhiseu}</td>
                     <td>
                         {#if bon.ghiseu}
                             {#if bon.ghiseu.icon}
