@@ -5,8 +5,8 @@
 <nav>
     <ul>
         <li><a on:click={() => goto('/')}>Acasa</a></li>
-        <li><a on:click={() => goto('/allGhiseuPage')}>Pagina Ghisee</a></li>
-        <li><a on:click={() => goto('/allBonPage')}>Pagina Bonuri</a></li>
+        <li><a on:click={() => goto('/allGhiseuPage')}>Ghisee</a></li>
+        <li><a on:click={() => goto('/allBonPage')}>Bonuri</a></li>
     </ul>
 </nav>
 
@@ -15,6 +15,7 @@
         background-color: #333;
         color: white;
         padding: 10px;
+        cursor: pointer;
     }
 
     ul {

@@ -214,11 +214,10 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                 />
                             </td>
                             <td >
-                                <div class="edit-delete-container">
-                                    <button  on:click={() => fetchBons(ghiseu.id)}>Bonurile Ghiseului</button>
-                                    
-                                        <button on:click={() => goto(`/editGhiseuPage/${ghiseu.id}`)}>Editeaza Ghiseu</button>
-                                        <button on:click={() => {
+                                <div class="view-edit-delete-container">
+                                        <button style="background-color:lightblue" on:click={() => fetchBons(ghiseu.id)}>Bonurile Ghiseului</button>
+                                        <button style="background-color:lightyellow" on:click={() => goto(`/editGhiseuPage/${ghiseu.id}`)}>Editeaza Ghiseu</button>
+                                        <button style="background-color:lightpink" on:click={() => {
                                             selectedGhiseuId = ghiseu.id;
                                             toastMessage = `Sterge ghiseul cu denumirea ${ghiseu.denumire}?`;
                                             showToast = true;
@@ -368,6 +367,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         border-collapse: collapse;
         margin-top: 10px;
         font-size: 0.8em;
+       
     }
     .fixed-table th, .fixed-table td {
         border: 1px solid #ddd;
@@ -376,9 +376,11 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        min-height:60px;
     }
     .fixed-table th {
         background-color: #f4f4f4;
+        
     }
     .add-button {
         background-color: #28a745;
@@ -403,15 +405,16 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
 
    
  
-    .edit-delete-container {
+    .view-edit-delete-container {
         flex: 1;
         display: flex;
         flex-direction: column;
     }
-    .edit-delete-container button {
+    .view-edit-delete-container button {
         flex: 1;
         font-size: 0.8em;
         padding: 2px;
+        cursor: pointer;
     }
     h1 {
         font-size: 1.2em;

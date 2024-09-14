@@ -102,24 +102,26 @@ async function fetchData(): Promise<void> {
                             N/A
                         {/if}
                     </td>
-                    <td>{new Date(bon.createdAt).toLocaleString('ro-RO', 
-                    {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    })}
+                    <td class="date-column">
+                        {new Date(bon.createdAt).toLocaleString('ro-RO', 
+                        {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
                     </td>
-                    <td>{new Date(bon.modifiedAt).toLocaleString('ro-RO', 
-                    {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                    })}
-                   </td>
+                    <td class="date-column">
+                        {new Date(bon.modifiedAt).toLocaleString('ro-RO', 
+                        {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
+                    </td>
                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
                         {bon.stare === 0 ? 'In curs de preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                     </td>
@@ -164,14 +166,6 @@ async function fetchData(): Promise<void> {
         font-weight: bold;
     }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    .table-container {
-        position: relative;
-        padding-top: 50px; /* Add padding-top to account for the navbar height */
-    }
 
     th, td {
         border: 1px solid #ddd;
@@ -193,5 +187,33 @@ async function fetchData(): Promise<void> {
         border-radius: 5px;
         cursor: pointer;
     }
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 0.8em;
+}
+
+/* Fixed size for action buttons */
+button {
+    width: 100px; /* Fixed width for buttons */
+    height: 30px; /* Fixed height for buttons */
+    font-size: 10px; /* Font size for button text */
+    margin: 2px; /* Margin between buttons */
+    cursor: pointer;
+}
+
+/* Center align data creation and last modification dates */
+td.date-column {
+    text-align: center;
+}
+
+/* Add padding-top to account for the navbar height */
+.table-container {
+    position: relative;
+    padding-top: 60px; /* Adjust padding-top as needed */
+}
 
 </style>
