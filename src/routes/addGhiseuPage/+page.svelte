@@ -85,6 +85,7 @@
     onMount(fetchIcons);
 </script>
 
+<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
 <form on:submit={handleSubmit}>
     <h1>Adauga un ghiseu:</h1>
     {#if errorMessage}

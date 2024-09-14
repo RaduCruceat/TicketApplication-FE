@@ -13,22 +13,19 @@
         goto('/addBonPage'); // Adjust the path according to your routing setup
     }
 
-    async function handleStatusChange(event: Event, id: number): Promise<void> {
-    const selectElement = event.target as HTMLSelectElement;
-    const newStatus = selectElement.value;
+    async function handleStatusChange(newStatus: string, idBon: number): Promise<void> {
     const url = newStatus === 'InCursDePreluare'
-        ? `${HostLink}/Bon/MarkAsInProgress/${id}`
+        ? `${HostLink}/Bon/MarkAsInProgress/${idBon}`
         : newStatus === 'Preluat'
-        ? `${HostLink}/Bon/MarkAsReceived/${id}`
-        : `${HostLink}/Bon/MarkAsClose/${id}`;
+        ? `${HostLink}/Bon/MarkAsReceived/${idBon}`
+        : `${HostLink}/Bon/MarkAsClose/${idBon}`;
 
     try {
         const response = await fetch(url, { method: 'PUT' });
         if (response.ok) {
-            fetchData(); // Refresh the data after updating the status
-        } else {
-            console.error('Failed to update status');
-        }
+            await fetchData(); // Refresh the data after updating the status
+            
+        } 
     } catch (error) {
         console.error('Error updating status:', error);
     }
@@ -87,7 +84,7 @@ async function fetchData(): Promise<void> {
             <tr>
                 <th>Ghiseu</th>
                 <th>Data Creari</th>
-                <th>Data ultimei modificari</th>
+                <th>Ultima modificare</th>
                 <th>Stare</th>
                 <th>Actiuni pentru stare</th>
             </tr>
@@ -124,23 +121,34 @@ async function fetchData(): Promise<void> {
                     })}
                    </td>
                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
-                        {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                        {bon.stare === 0 ? 'In curs de preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                     </td>
-                   <td>
-    <select on:change={(event) => handleStatusChange(event, bon.id)} style="width: 150px; text-align: center; text-align-last: center;">
-        <option disabled selected>Schimba Starea</option> <!-- Placeholder option -->
-        
-        {#if bon.stare !== 0}
-            <option value="InCursDePreluare">In Curs De Preluare</option>
-        {/if}
-        {#if bon.stare !== 1}
-            <option value="Preluat">Preluat</option>
-        {/if}
-        {#if bon.stare !== 2}
-            <option value="Inchis">Inchis</option>
-        {/if}
-    </select>
-</td>
+                    <td>
+                        {#if bon.stare !== 0}
+                            <button 
+                                on:click={() => handleStatusChange('InCursDePreluare', bon.id)}
+                                style="background-color: lightblue;"
+                            >
+                                In curs de preluare
+                            </button>
+                        {/if}
+                        {#if bon.stare !== 1}
+                            <button 
+                                on:click={() => handleStatusChange('Preluat', bon.id)}
+                                style="background-color: lightyellow;"
+                            >
+                                Preluat
+                            </button>
+                        {/if}
+                        {#if bon.stare !== 2}
+                            <button 
+                                on:click={() => handleStatusChange('Inchis', bon.id)}
+                                style="background-color: lightgreen;"
+                            >
+                                Inchis
+                            </button>
+                        {/if}
+                    </td>
 
                     
                 </tr>

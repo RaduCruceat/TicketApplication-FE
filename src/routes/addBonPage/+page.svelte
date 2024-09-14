@@ -104,7 +104,7 @@
         initializeDates(); // Initialize dates on mount
     });
 </script>
-
+<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
 <form on:submit={handleSubmit}>
     <h1>Adauga un bon:</h1>
     <div class="button-container">
@@ -133,7 +133,7 @@
     <label>
         Stare:
         <select bind:value={stare}>
-            <option value={StareEnum.InCursDePreluare}>InCursDePreluare</option>
+            <option value={StareEnum.InCursDePreluare}>In curs de preluare</option>
             <option value={StareEnum.Preluat}>Preluat</option>
             <option value={StareEnum.Inchis}>Inchis</option>
         </select>

@@ -75,15 +75,7 @@
     }
 }
 
-async function handleStatusChange(event: Event, idBon: number): Promise<void> {
-    const selectElement = event.target as HTMLSelectElement;
-    const newStatus = selectElement.value;
-
-    // If the selected value is "Schimba Starea", do nothing
-    if (newStatus === 'Schimba Starea') {
-        return;
-    }
-    
+async function handleStatusChange(newStatus: string, idBon: number): Promise<void> {
     const url = newStatus === 'InCursDePreluare'
         ? `${HostLink}/Bon/MarkAsInProgress/${idBon}`
         : newStatus === 'Preluat'
@@ -176,6 +168,7 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
 });
 </script>
 
+
 {#if showToast}
     <Toast
         message={toastMessage}
@@ -193,13 +186,13 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
         <div class="ghiseu-container">
             <h1>Pagina Ghisee</h1>
             <button class="add-button" on:click={() => goto('/addGhiseuPage')}>Adauga Ghiseu</button>
-            <table>
+            <table class="fixed-table">
                 <thead>
                     <tr>      
-                        <th>Cod</th>    
+                        <th style="width: 40px;">Cod</th>    
                         <th>Denumire</th>
                         <th>Descriere</th>
-                        <th>Activ</th>
+                        <th style="width: 40px;">Activ</th>
                         <th>Actiuni</th> 
                     </tr>
                 </thead>
@@ -207,11 +200,11 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                     {#each ghiseuList as ghiseu}
                         <tr>
                             <td>{ghiseu.cod}</td>
-                            <td>
+                            <td class="denumire-cell">
                                 {#if ghiseu.icon}
-                                    <img src={ghiseu.icon} alt={ghiseu.denumire} style="max-width: 20px; max-height: 20px;" />
+                                    <img src={ghiseu.icon} alt={ghiseu.denumire} class="ghiseu-icon" />
                                 {/if}
-                                {ghiseu.denumire}
+                                <span>{ghiseu.denumire}</span>
                             </td>
                             <td>{ghiseu.descriere}</td>
                             <td class="checkmark-cell" style="background-color: {ghiseu.activ ? 'lightgreen' : 'lightcoral'};">
@@ -220,13 +213,18 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                                     on:click={() => handleChange1(ghiseu.id, ghiseu.activ ? 'inactive' : 'active')}
                                 />
                             </td>
-                            <td>
-                                <select on:change={(e) => handleActionChange(e, ghiseu.id, ghiseu.denumire)}>
-                                    <option value="">Selecteaza actiunea</option>
-                                    <option value="allBonByIdPage">Bonurile Ghiseului</option>
-                                    <option value={`editGhiseuPage/${ghiseu.id}`}>Editeaza Ghiseu</option>
-                                    <option value="delete">Sterge Ghiseu</option>
-                                </select>
+                            <td >
+                                <div class="edit-delete-container">
+                                    <button  on:click={() => fetchBons(ghiseu.id)}>Bonurile Ghiseului</button>
+                                    
+                                        <button on:click={() => goto(`/editGhiseuPage/${ghiseu.id}`)}>Editeaza Ghiseu</button>
+                                        <button on:click={() => {
+                                            selectedGhiseuId = ghiseu.id;
+                                            toastMessage = `Sterge ghiseul cu denumirea ${ghiseu.denumire}?`;
+                                            showToast = true;
+                                        }}>Sterge Ghiseu</button>
+                                    </div>
+                               
                             </td>
                         </tr>
                     {/each}
@@ -244,12 +242,12 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                         <p>{errorMessage}</p>
                     </div>
                 {:else}
-                    <table>
+                    <table class="fixed-table">
                         <thead>
                             <tr>
                                 <th>Ghiseu</th>
                                 <th>Data Creari</th>
-                                <th>Data ultimei modificari</th>
+                                <th>Ultima modificare</th>
                                 <th>Stare</th>
                                 <th>Actiuni pentru stare</th>
                             </tr>
@@ -257,12 +255,12 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                         <tbody>
                             {#each bons as bon}
                                 <tr>
-                                    <td>
+                                    <td class="denumire-cell">
                                         {#if bon.ghiseu}
                                             {#if bon.ghiseu.icon}
-                                                <img src={bon.ghiseu.icon} alt={bon.ghiseu.denumire} style="max-width: 20px; max-height: 20px; vertical-align: middle; margin-right: 5px;" />
+                                                <img src={bon.ghiseu.icon} alt={bon.ghiseu.denumire} class="ghiseu-icon" />
                                             {/if}
-                                            {bon.ghiseu.denumire}
+                                            <span>{bon.ghiseu.denumire}</span>
                                         {:else}
                                             N/A
                                         {/if}
@@ -282,21 +280,35 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                                         minute: '2-digit'
                                     })}</td>
                                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
-                                        {bon.stare === 0 ? 'In Curs De Preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                                        {bon.stare === 0 ? 'In curs de preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
                                     </td>
                                     <td>
-                                        <select on:change={(event) => handleStatusChange(event, bon.id)} style="width: 150px; text-align: center; text-align-last: center;">
-                                            <option value="Schimba Starea" selected>Schimba Starea</option>
+                                        <div class="bon-buttons-container">
                                             {#if bon.stare !== 0}
-                                                <option value="InCursDePreluare">In Curs De Preluare</option>
+                                                <button 
+                                                    on:click={() => handleStatusChange('InCursDePreluare', bon.id)}
+                                                    class="fixed-button lightblue-button"
+                                                >
+                                                    In curs de preluare
+                                                </button>
                                             {/if}
                                             {#if bon.stare !== 1}
-                                                <option value="Preluat">Preluat</option>
+                                                <button 
+                                                    on:click={() => handleStatusChange('Preluat', bon.id)}
+                                                    class="fixed-button lightyellow-button"
+                                                >
+                                                    Preluat
+                                                </button>
                                             {/if}
                                             {#if bon.stare !== 2}
-                                                <option value="Inchis">Inchis</option>
+                                                <button 
+                                                    on:click={() => handleStatusChange('Inchis', bon.id)}
+                                                    class="fixed-button lightgreen-button"
+                                                >
+                                                    Inchis
+                                                </button>
                                             {/if}
-                                        </select>
+                                        </div>
                                     </td>
                                 </tr>
                             {/each}
@@ -305,20 +317,39 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
                 {/if}
             {/if}
         </div>
-        
     </div>
 {/if}
 
-
 <style>
+        /* Fixed size for buttons */
+        .fixed-button {
+        width: 60px;
+        font-size: 0.3em;
+        cursor: pointer;
+    }
+
+    /* Background colors for each button */
+    .lightblue-button {
+        background-color: lightblue;
+    }
+
+    .lightyellow-button {
+        background-color: lightyellow;
+    }
+
+    .lightgreen-button {
+        background-color: lightgreen;
+    }
+
     .container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 10px;
     }
     .ghiseu-container,
     .bon-container {
-        padding: 20px;
+        padding: 10px;
+        overflow-x: auto;
     }
     .checkmark-cell {
         display: flex;
@@ -328,28 +359,86 @@ async function handleStatusChange(event: Event, idBon: number): Promise<void> {
     .error {
         color: red;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        font-size: 0.9em;
     }
-    table {
+    .fixed-table {
         width: 100%;
+        table-layout: fixed;
         border-collapse: collapse;
-        margin-top: 20px;
+        margin-top: 10px;
+        font-size: 0.8em;
     }
-    th, td {
+    .fixed-table th, .fixed-table td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 4px;
         text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
-    th {
+    .fixed-table th {
         background-color: #f4f4f4;
     }
     .add-button {
         background-color: #28a745;
         color: white;
         border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
+        padding: 5px 10px;
+        border-radius: 3px;
         cursor: pointer;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        font-size: 0.9em;
     }
+    .denumire-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .ghiseu-icon {
+        max-width: 16px;
+        max-height: 16px;
+        margin-right: 3px;
+    }
+
+   
+ 
+    .edit-delete-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .edit-delete-container button {
+        flex: 1;
+        font-size: 0.8em;
+        padding: 2px;
+    }
+    h1 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+
+
+/* Layout for the action buttons in the "bon" table to be stacked vertically */
+.bon-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Add some space between the buttons */
+}
+
+/* Adjust button styles to be uniform and not too large */
+.fixed-button {
+    width: 100px;
+    font-size: 0.8em;
+    cursor: pointer;
+    padding: 5px;
+    text-align: center;
+}
+
+
+/* Styling for the rest of the page */
+
+
 </style>

@@ -83,7 +83,7 @@
         fetchGhiseuData(id);
     });
 </script>
-
+<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
 <form on:submit={handleSubmit}>
     <h1>Modifica ghiseu:</h1>
     {#if errorMessage}
