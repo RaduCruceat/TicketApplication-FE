@@ -4,9 +4,9 @@
 
 <nav>
     <ul>
-        <li><a on:click={() => goto('/')}>Acasa</a></li>
-        <li><a on:click={() => goto('/allGhiseuPage')}>Ghisee</a></li>
-        <li><a on:click={() => goto('/allBonPage')}>Bonuri</a></li>
+        <li><a href="/" on:click|preventDefault={() => goto('/')}>Acasa</a></li>
+        <li><a href="/allGhiseuPage" on:click|preventDefault={() => goto('/allGhiseuPage')}>Ghisee</a></li>
+        <li><a href="/allBonPage" on:click|preventDefault={() => goto('/allBonPage')}>Bonuri</a></li>
     </ul>
 </nav>
 
@@ -15,7 +15,6 @@
         background-color: #333;
         color: white;
         padding: 10px;
-        cursor: pointer;
     }
 
     ul {
