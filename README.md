@@ -5,6 +5,14 @@ A **Svelte** and **TypeScript** based frontend application that allows users to 
 ### Backend API
 The project connects to a backend API built in **ASP.NET Core** (available in [this](https://github.com/RaduCruceat/TicketApplication-BE) repository).
 
+### Frontend Tech Stack
+- **Svelte**: Fast and reactive front-end framework.
+- **TypeScript**: Typed JavaScript for better development experience.
+- **SvelteKit CSS**: Custom styling for application using Svelte's scoped CSS features.
+- **HTML**: Semantic structure for the UI.
+
+<img src="https://github.com/RaduCruceat/TicketApplication-FE/blob/main/Screenshots/Screen1.png" alt="Cars Page"  width="400">
+
 ## Features
 
 ### Counter Management
