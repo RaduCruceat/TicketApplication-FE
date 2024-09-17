@@ -2,6 +2,7 @@
 
 A **Svelte** and **TypeScript** based frontend application that allows users to manage a ticket system. This project provides an interface to handle multiple counters, each of which can contain multiple tickets. Each counter can be added, edited, deleted, and changed between active and inactive states. Similarly, tickets can be created, updated, deleted, and transitioned between several states.
 
+### Backend API
 The project connects to a backend API built in **ASP.NET Core** (available in [this](https://github.com/RaduCruceat/TicketApplication-BE) repository).
 
 ## Features
@@ -29,7 +30,4 @@ The project connects to a backend API built in **ASP.NET Core** (available in [t
 - **TypeScript**: Typed JavaScript for better development experience.
 - **SvelteKit CSS**: Custom styling for application using Svelte's scoped CSS features.
 - **HTML**: Semantic structure for the UI.
-
-### Backend API
-The frontend interacts with an **ASP.NET Core** backend API to perform CRUD operations on counters and tickets. The backend repository can be found [here](https://github.com/RaduCruceat/TicketApplication-BE).
 
