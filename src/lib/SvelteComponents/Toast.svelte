@@ -43,7 +43,7 @@
     }
 
     .close-button {
-        background-color: #6c757d;
+        background-color: black;
         color: white;
         border: none;
         padding: 8px 16px;

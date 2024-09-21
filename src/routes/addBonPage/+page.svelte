@@ -107,10 +107,7 @@
 <button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
 <form on:submit={handleSubmit}>
     <h1>Adauga un bon:</h1>
-    <div class="button-container">
-        <button type="button" class="top-button">Persoana Fizica</button>
-        <button type="button" class="top-button">Persoana Juridica</button>
-    </div>
+   
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
@@ -170,7 +167,7 @@
     button {
         margin-top: 20px;
         padding: 10px;
-        background-color: #28a745;
+        background-color: black;
         color: white;
         border: none;
         border-radius: 5px;
@@ -184,7 +181,7 @@
     }
 
     .success {
-        color: green;
+        color: black;
         font-weight: bold;
         margin-bottom: 10px;
     }

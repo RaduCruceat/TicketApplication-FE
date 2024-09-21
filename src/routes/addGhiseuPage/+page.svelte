@@ -148,7 +148,7 @@
     button {
         margin-top: 20px;
         padding: 10px;
-        background-color: #28a745;
+        background-color: black;
         color: white;
         border: none;
         border-radius: 5px;
@@ -162,7 +162,7 @@
     }
 
     .success {
-        color: green;
+        color: black;
         font-weight: bold;
         margin-bottom: 10px;
     }
