@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import type { GhiseuID, BonID, ApiResponse } from '$lib/ObjectsList/types'; 
+    import type { GhiseuID, BonID, ApiResponse, Ghiseu } from '$lib/ObjectsList/types'; 
     import Navbar from '$lib/SvelteComponents/navbar.svelte'; 
     import Toast from '$lib/SvelteComponents/Toast.svelte';
     import Checkmark from '$lib/SvelteComponents/Checkmark.svelte';
@@ -18,6 +18,14 @@
     let showToast: boolean = false;
     let toastMessage: string = '';
     let selectedGhiseuId: number | null = null;
+
+    let selectedGhiseuDenumire: string = ''; // New variable to store ghiseu.denumire
+    let selectedGhiseuIcon: string = ''; // New variable to store ghiseu.denumire
+
+    async function storeNameOfGhiseu(ghiseuName: string) {
+        selectedGhiseuDenumire=ghiseuName;
+        
+    }
 
     async function fetchData(): Promise<void> {
         try {
@@ -39,16 +47,19 @@
             errorMessage = error instanceof Error ? 'Error: ' + error.message : 'An unknown error occurred';
             ghiseuList = [];
         }
+       
     }
 
-    async function fetchBons(id: number): Promise<void> {
-    try {
+    async function fetchBons(id: number, ghiseuName: string,ghiseuIcon:string): Promise<void> {
+    selectedGhiseuDenumire=ghiseuName;
+    selectedGhiseuIcon=ghiseuIcon;
+        try {
         const [bonResponse, ghiseuResponse] = await Promise.all([
             fetch(`${HostLink}/Bon/GetAll/${id}`),
             fetch(`${HostLink}/Ghiseu/Get/${id}`)
         ]);
         selectedGhiseuId = id;
-        
+      
         if (bonResponse.ok && ghiseuResponse.ok) {
             const bonData: ApiResponse = await bonResponse.json();
             const ghiseuData: ApiResponse = await ghiseuResponse.json();
@@ -60,9 +71,8 @@
                 })) : [];
                 errorMessage = ''; // Clear any previous error message
             } else {
-                // Set the error message specific to bon fetching
-                errorMessage = bonData.errorMessage || 'An unknown error occurred while fetching bon data';
-                bons = [];
+                errorMessage = bonData.errorMessage || 'Ghiseul este inactiv sau nu contine bonuri.';
+                bons = []; // Ensure bons is empty in case of failure
             }
         } else {
             const bonErrorData = await bonResponse.json();
@@ -73,6 +83,7 @@
         errorMessage = error instanceof Error ? 'Error: ' + error.message : 'An unknown error occurred';
         bons = [];
     }
+   
 }
 
 async function handleStatusChange(newStatus: string, idBon: number): Promise<void> {
@@ -87,7 +98,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         if (response.ok) {
             await fetchData(); // Refresh the data after updating the status
             if (selectedGhiseuId) {
-                await fetchBons(selectedGhiseuId);
+                fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon); 
             }
         } else {
             console.error('Failed to update status');
@@ -145,7 +156,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
             toastMessage = `Sterge ghiseul cu denumirea ${denumire}?`;
             showToast = true;
         } else if (action === 'allBonByIdPage') {
-            fetchBons(id);
+            fetchBons(id,selectedGhiseuDenumire,selectedGhiseuIcon);
         } else if (action) {
             goto(`/${action}`);
         }
@@ -162,9 +173,9 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
     const ghiseuIdParam = params.get('ghiseuId');
     if (ghiseuIdParam) {
         selectedGhiseuId = parseInt(ghiseuIdParam, 10);
-        fetchBons(selectedGhiseuId); // Automatically fetch Bons for the selected Ghiseu
+        fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon); // Automatically fetch Bons for the selected Ghiseu
     } // Fetch all Ghiseu data if no specific Ghiseu is selected
-    
+
 });
 </script>
 
@@ -216,7 +227,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                             <td>
                                 <div class="view-edit-delete-container">
                                     <!-- Bons Button with Ticket Icon -->
-                                    <button class="circle-btn black-btn" on:click={() => fetchBons(ghiseu.id)}>
+                                    <button class="circle-btn black-btn" on:click={() => fetchBons(ghiseu.id,ghiseu.denumire,ghiseu.icon)}>
                                         <i class="fas fa-ticket-alt"></i>
                                     </button>
                             
@@ -242,9 +253,19 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         </div>
 
         <div class="bon-container">
-            <h1>{selectedGhiseuId !== null ? `Bonurile pt. ghiseul cu id-ul: ${selectedGhiseuId}` : 'Niciun ghiseu selectat'}</h1>
+           
+                <h1>
+                   
+                    {#if selectedGhiseuId !== null}
+                    Lista de bonuri pentru:
+                      <img src={selectedGhiseuIcon} alt={selectedGhiseuDenumire} style="width: 15px; height: 15px; margin-right: 2px;" />
+                      {selectedGhiseuDenumire}
+                    {:else}
+                      Niciun ghiseu selectat
+                    {/if}
+                  </h1>
             <button class="add-button" on:click={() => goto('/addBonPage')}>Adauga Bon</button>
-        
+           
             {#if selectedGhiseuId !== null}
                 {#if errorMessage && bons.length === 0}
                     <div class="error">
@@ -254,7 +275,6 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                     <table class="fixed-table">
                         <thead>
                             <tr>
-                                <th>Ghiseu</th>
                                 <th>Ultima modificare</th>
                                 <th>Stare</th>
                                 <th>Actiuni pentru stare</th>
@@ -262,18 +282,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                         </thead>
                         <tbody>
                             {#each bons as bon}
-                                <tr>
-                                    <td class="denumire-cell">
-                                        {#if bon.ghiseu}
-                                            {#if bon.ghiseu.icon}
-                                                <img src={bon.ghiseu.icon} alt={bon.ghiseu.denumire} class="ghiseu-icon" />
-                                            {/if}
-                                            <span>{bon.ghiseu.denumire}</span>
-                                        {:else}
-                                            N/A
-                                        {/if}
-                                    </td>
-                                 
+                                <tr>                                   
                                     <td>{new Date(bon.modifiedAt).toLocaleString('ro-RO', {
                                         year: 'numeric',
                                         month: '2-digit',
