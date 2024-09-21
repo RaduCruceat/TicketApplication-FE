@@ -185,8 +185,5 @@
         font-weight: bold;
         margin-bottom: 10px;
     }
-    .button-container {
-        display: flex;
-        margin-bottom: 10px;
-    }
+   
 </style>

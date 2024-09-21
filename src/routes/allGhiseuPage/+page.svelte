@@ -153,7 +153,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
 
         if (action === 'delete') {
             selectedGhiseuId = id;
-            toastMessage = `Sterge ghiseul cu denumirea ${denumire}?`;
+            toastMessage = `Sterge ${denumire}?`;
             showToast = true;
         } else if (action === 'allBonByIdPage') {
             fetchBons(id,selectedGhiseuDenumire,selectedGhiseuIcon);
@@ -239,7 +239,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                     <!-- Sterge Button with Trash Bin Icon -->
                                     <button class="circle-btn black-btn" on:click={() => {
                                         selectedGhiseuId = ghiseu.id;
-                                        toastMessage = `Sterge ghiseul cu denumirea ${ghiseu.denumire}?`;
+                                        toastMessage = `Sterge ${ghiseu.denumire}?`;
                                         showToast = true;
                                     }}>
                                         <i class="fas fa-trash-alt"></i>
@@ -258,7 +258,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                    
                     {#if selectedGhiseuId !== null}
                     Lista de bonuri pentru:
-                      <img src={selectedGhiseuIcon} alt={selectedGhiseuDenumire} style="width: 15px; height: 15px; margin-right: 2px;" />
+                      <img src={selectedGhiseuIcon} alt={selectedGhiseuDenumire} style="width: 15px; height: 15px; margin-right: 3px;" />
                       {selectedGhiseuDenumire}
                     {:else}
                       Niciun ghiseu selectat
