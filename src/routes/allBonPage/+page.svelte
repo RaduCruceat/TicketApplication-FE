@@ -180,7 +180,7 @@ async function fetchData(): Promise<void> {
         position: absolute;
         top: 10px;
         right: 10px;
-        background-color: #28a745; /* Green color */
+        background-color: black; /* Green color */
         color: white;
         border: none;
         padding: 10px 20px;

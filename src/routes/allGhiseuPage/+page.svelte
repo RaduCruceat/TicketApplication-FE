@@ -213,17 +213,27 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                     on:click={() => handleChange1(ghiseu.id, ghiseu.activ ? 'inactive' : 'active')}
                                 />
                             </td>
-                            <td >
+                            <td>
                                 <div class="view-edit-delete-container">
-                                        <button style="background-color:lightblue" on:click={() => fetchBons(ghiseu.id)}>Bonurile Ghiseului</button>
-                                        <button style="background-color:lightyellow" on:click={() => goto(`/editGhiseuPage/${ghiseu.id}`)}>Editeaza Ghiseu</button>
-                                        <button style="background-color:lightpink" on:click={() => {
-                                            selectedGhiseuId = ghiseu.id;
-                                            toastMessage = `Sterge ghiseul cu denumirea ${ghiseu.denumire}?`;
-                                            showToast = true;
-                                        }}>Sterge Ghiseu</button>
-                                    </div>
-                               
+                                    <!-- Bons Button with Ticket Icon -->
+                                    <button class="circle-btn black-btn" on:click={() => fetchBons(ghiseu.id)}>
+                                        <i class="fas fa-ticket-alt"></i>
+                                    </button>
+                            
+                                    <!-- Modifica Button with Pencil Icon -->
+                                    <button class="circle-btn black-btn" on:click={() => goto(`/editGhiseuPage/${ghiseu.id}`)}>
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                            
+                                    <!-- Sterge Button with Trash Bin Icon -->
+                                    <button class="circle-btn black-btn" on:click={() => {
+                                        selectedGhiseuId = ghiseu.id;
+                                        toastMessage = `Sterge ghiseul cu denumirea ${ghiseu.denumire}?`;
+                                        showToast = true;
+                                    }}>
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     {/each}
@@ -245,7 +255,6 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                         <thead>
                             <tr>
                                 <th>Ghiseu</th>
-                                <th>Data Creari</th>
                                 <th>Ultima modificare</th>
                                 <th>Stare</th>
                                 <th>Actiuni pentru stare</th>
@@ -264,13 +273,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                             N/A
                                         {/if}
                                     </td>
-                                    <td>{new Date(bon.createdAt).toLocaleString('ro-RO', {
-                                        year: 'numeric',
-                                        month: '2-digit',
-                                        day: '2-digit',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}</td>
+                                 
                                     <td>{new Date(bon.modifiedAt).toLocaleString('ro-RO', {
                                         year: 'numeric',
                                         month: '2-digit',
@@ -320,6 +323,41 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
 {/if}
 
 <style>
+      .view-edit-delete-container {
+        display: flex;
+        gap: 10px; /* Add some space between buttons */
+    }
+
+    .circle-btn {
+        width: 40px;       /* Adjust the width and height for the size of the button */
+        height: 40px;
+        border-radius: 50%; /* Makes the button circular */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;    /* Adjust icon size */
+        color: white;       /* Icon color */
+    }
+
+
+    .black-btn {
+        background-color: black;
+        color: white;
+    }
+
+ 
+
+    .circle-btn i {
+        pointer-events: none; /* Prevent clicking on the icon instead of the button */
+    }
+
+    .circle-btn:hover {
+        opacity: 0.8; /* Optional hover effect */
+    }
+
+
         /* Fixed size for buttons */
         .fixed-button {
         width: 60px;
@@ -383,7 +421,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         
     }
     .add-button {
-        background-color: #28a745;
+        background-color: black;
         color: white;
         border: none;
         padding: 5px 10px;
@@ -407,8 +445,8 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
  
     .view-edit-delete-container {
         flex: 1;
-        display: flex;
-        flex-direction: column;
+        display:inline-flex;
+
     }
     .view-edit-delete-container button {
         flex: 1;
