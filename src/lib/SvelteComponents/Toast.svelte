@@ -15,8 +15,8 @@
 <div class="toast">
     <p>{message}</p>
     <div class="buttons">
-        <button class="close-button" on:click={handleClose}>Inchide</button>
-        <button class="confirm-button" on:click={handleConfirm}>Confirma</button>
+        <button class="close-button" on:click={handleClose}>Închide</button>
+        <button class="confirm-button" on:click={handleConfirm}>Confirmă</button>
     </div>
 </div>
 

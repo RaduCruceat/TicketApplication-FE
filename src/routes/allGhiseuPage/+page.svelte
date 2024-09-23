@@ -153,7 +153,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
 
         if (action === 'delete') {
             selectedGhiseuId = id;
-            toastMessage = `Sterge ${denumire}?`;
+            toastMessage = `Șterge ${denumire}?`;
             showToast = true;
         } else if (action === 'allBonByIdPage') {
             fetchBons(id,selectedGhiseuDenumire,selectedGhiseuIcon);
@@ -195,8 +195,8 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
 {:else}
     <div class="container">
         <div class="ghiseu-container">
-            <h1>Pagina Ghisee</h1>
-            <button class="add-button" on:click={() => goto('/addGhiseuPage')}>Adauga Ghiseu</button>
+            <h1>Pagină pentru Ghișee</h1>
+            <button class="add-button" on:click={() => goto('/addGhiseuPage')}>Adaugă Ghișeu</button>
             <table class="fixed-table">
                 <thead>
                     <tr>      
@@ -204,7 +204,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                         <th>Denumire</th>
                         <th>Descriere</th>
                         <th style="width: 40px;">Activ</th>
-                        <th>Actiuni</th> 
+                        <th>Acțiuni</th> 
                     </tr>
                 </thead>
                 <tbody>
@@ -239,7 +239,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                     <!-- Sterge Button with Trash Bin Icon -->
                                     <button class="circle-btn black-btn" on:click={() => {
                                         selectedGhiseuId = ghiseu.id;
-                                        toastMessage = `Sterge ${ghiseu.denumire}?`;
+                                        toastMessage = `Șterge ${ghiseu.denumire}?`;
                                         showToast = true;
                                     }}>
                                         <i class="fas fa-trash-alt"></i>
@@ -257,14 +257,14 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                 <h1>
                    
                     {#if selectedGhiseuId !== null}
-                    Lista de bonuri pentru:
+                    Listă de bonuri pentru:
                       <img src={selectedGhiseuIcon} alt={selectedGhiseuDenumire} style="width: 15px; height: 15px; margin-right: 3px;" />
                       {selectedGhiseuDenumire}
                     {:else}
                       Niciun ghiseu selectat
                     {/if}
                   </h1>
-            <button class="add-button" on:click={() => goto('/addBonPage')}>Adauga Bon</button>
+            <button class="add-button" on:click={() => goto('/addBonPage')}>Adaugă Bon</button>
            
             {#if selectedGhiseuId !== null}
                 {#if errorMessage && bons.length === 0}
@@ -277,7 +277,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                             <tr>
                                 <th>Ultima modificare</th>
                                 <th>Stare</th>
-                                <th>Actiuni pentru stare</th>
+                                <th>Acțiuni pentru stare</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -291,7 +291,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                         minute: '2-digit'
                                     })}</td>
                                     <td style="background-color: {bon.stare === 0 ? 'lightblue' : bon.stare === 1 ? 'lightyellow' : 'lightgreen'};">
-                                        {bon.stare === 0 ? 'In curs de preluare' : bon.stare === 1 ? 'Preluat' : 'Inchis'}
+                                        {bon.stare === 0 ? 'În curs de preluare' : bon.stare === 1 ? 'Preluat' : 'Închis'}
                                     </td>
                                     <td>
                                         <div class="bon-buttons-container">
@@ -300,7 +300,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                                     on:click={() => handleStatusChange('InCursDePreluare', bon.id)}
                                                     class="fixed-button lightblue-button"
                                                 >
-                                                    In curs de preluare
+                                                    în curs de preluare
                                                 </button>
                                             {/if}
                                             {#if bon.stare !== 1}
@@ -316,7 +316,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                                                     on:click={() => handleStatusChange('Inchis', bon.id)}
                                                     class="fixed-button lightgreen-button"
                                                 >
-                                                    Inchis
+                                                    Închis
                                                 </button>
                                             {/if}
                                         </div>
@@ -411,9 +411,10 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
     .fixed-table {
         width: 100%;
         table-layout: fixed;
-        border-collapse: collapse;
+        border-collapse:initial;
         margin-top: 10px;
         font-size: 0.8em;
+        border: 2px solid black;
        
     }
     .fixed-table th, .fixed-table td {
@@ -424,10 +425,12 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         text-overflow: ellipsis;
         white-space: nowrap;
         min-height:60px;
+        border: 2px solid black;
+       
     }
     .fixed-table th {
         background-color: #f4f4f4;
-        
+        border: 2px solid black;
     }
     .add-button {
         background-color: black;
@@ -443,6 +446,10 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         display: flex;
         align-items: center;
         justify-content: center;
+   
+    
+    border: 2px solid black; /* Ensure the border is explicitly set to 2px */
+        
     }
     .ghiseu-icon {
         max-width: 16px;

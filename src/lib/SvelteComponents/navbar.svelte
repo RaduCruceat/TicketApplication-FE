@@ -5,7 +5,7 @@
 <nav>
     <ul>
         <li><a href="/" on:click|preventDefault={() => goto('/')}>Acasa</a></li>
-        <li><a href="/allGhiseuPage" on:click|preventDefault={() => goto('/allGhiseuPage')}>Ghisee</a></li>
+        <li><a href="/allGhiseuPage" on:click|preventDefault={() => goto('/allGhiseuPage')}>Ghișee</a></li>
         <li><a href="/allBonPage" on:click|preventDefault={() => goto('/allBonPage')}>Bonuri</a></li>
     </ul>
 </nav>

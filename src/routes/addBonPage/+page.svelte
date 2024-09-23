@@ -104,9 +104,9 @@
         initializeDates(); // Initialize dates on mount
     });
 </script>
-<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
+<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioară</button>
 <form on:submit={handleSubmit}>
-    <h1>Adauga un bon:</h1>
+    <h1>Adaugă un bon:</h1>
    
     {#if errorMessage}
         <div class="error">
@@ -119,7 +119,7 @@
         </div>
     {/if}
     <label>
-        Id Ghiseu:
+        Id-ul Ghișeului:
         <select bind:value={selectedIdGhiseu}>
             <option value="" disabled>Select Id Ghiseu</option>
             {#each ghiseuList as ghiseu}
@@ -130,20 +130,20 @@
     <label>
         Stare:
         <select bind:value={stare}>
-            <option value={StareEnum.InCursDePreluare}>In curs de preluare</option>
+            <option value={StareEnum.InCursDePreluare}>În curs de preluare</option>
             <option value={StareEnum.Preluat}>Preluat</option>
-            <option value={StareEnum.Inchis}>Inchis</option>
+            <option value={StareEnum.Inchis}>Închis</option>
         </select>
     </label>
     <label>
-        Created At:
+        Creat in data:
         <input type="text" value={createdAt} readonly />
     </label>
     <label>
-        Modified At:
+        Ultima modificare:
         <input type="text" value={modifiedAt} readonly />
     </label>
-    <button type="submit">Salveaza</button>
+    <button type="submit">Salvează</button>
 </form>
 
 <style>

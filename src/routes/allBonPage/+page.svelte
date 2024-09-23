@@ -76,17 +76,17 @@ async function fetchData(): Promise<void> {
         <p>{errorMessage}</p>
     </div>
 {:else}
-<h1>Pagina Bonuri</h1>
+<h1>Pagina pentru bonuri</h1>
 <div class="table-container">
-    <button class="add-button" on:click={navigateToAddBonPage}>Adauga Bon</button>
+    <button class="add-button" on:click={navigateToAddBonPage}>Adaugă Bon</button>
     <table>
         <thead>
             <tr>
-                <th>Ghiseu</th>
-                <th>Data Creari</th>
+                <th>Ghișeu</th>
+                <th>Data Creări</th>
                 <th>Ultima modificare</th>
                 <th>Stare</th>
-                <th>Actiuni pentru stare</th>
+                <th>Acțiuni pentru stare</th>
             </tr>
         </thead>
         <tbody>
@@ -131,7 +131,7 @@ async function fetchData(): Promise<void> {
                                 on:click={() => handleStatusChange('InCursDePreluare', bon.id)}
                                 style="background-color: lightblue;"
                             >
-                                In curs de preluare
+                                În curs de preluare
                             </button>
                         {/if}
                         {#if bon.stare !== 1}
@@ -147,7 +147,7 @@ async function fetchData(): Promise<void> {
                                 on:click={() => handleStatusChange('Inchis', bon.id)}
                                 style="background-color: lightgreen;"
                             >
-                                Inchis
+                                Închis
                             </button>
                         {/if}
                     </td>
@@ -168,9 +168,9 @@ async function fetchData(): Promise<void> {
 
 
     th, td {
-        border: 1px solid #ddd;
         padding: 8px;
         text-align: center;
+        border: 2px solid black;
     }
 
     th {
@@ -191,9 +191,9 @@ async function fetchData(): Promise<void> {
     table {
         width: 100%;
         table-layout: fixed;
-        border-collapse: collapse;
         margin-top: 10px;
         font-size: 0.8em;
+        border: 2px solid black;
 }
 
 /* Fixed size for action buttons */
@@ -208,6 +208,7 @@ button {
 /* Center align data creation and last modification dates */
 td.date-column {
     text-align: center;
+    border: 2px solid black;
 }
 
 /* Add padding-top to account for the navbar height */

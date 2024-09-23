@@ -85,9 +85,9 @@
     onMount(fetchIcons);
 </script>
 
-<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioara</button>
+<button type="button" on:click={() => goto('/allGhiseuPage')}>Pagina anterioară</button>
 <form on:submit={handleSubmit}>
-    <h1>Adauga un ghiseu:</h1>
+    <h1>Adaugă un ghișeu:</h1>
     {#if errorMessage}
         <div class="error">
             <p>{errorMessage}</p>
@@ -111,9 +111,9 @@
         <textarea bind:value={descriere} required></textarea>
     </label>
     <label>
-        Icon:
+        Imagine:
         <select bind:value={icon} required>
-            <option value="" disabled>Select an icon</option>
+            <option value="" disabled>Selectează o imagine</option>
             {#each availableIcons as iconFile}
                 <option value={`${iconFile}`}>{iconFile}</option>
             {/each}
