@@ -10,6 +10,9 @@
     export let data: { secretLink: string };
     let HostLink=data.secretLink;
     let isChecked = false;
+
+    let createdAt: string = '';
+    let modifiedAt: string = '';
     
     let ghiseuList: GhiseuID[] = [];
     let bons: BonID[] = [];
@@ -21,11 +24,54 @@
 
     let selectedGhiseuDenumire: string = ''; // New variable to store ghiseu.denumire
     let selectedGhiseuIcon: string = ''; // New variable to store ghiseu.denumire
+    let selectedGhiseuActive: boolean =false;
 
     async function storeNameOfGhiseu(ghiseuName: string) {
         selectedGhiseuDenumire=ghiseuName;
         
     }
+    
+
+    async function addTicket() {
+    if (!selectedGhiseuId) {
+      console.error('selectedGhiseuId is not set.');
+      return;
+    }
+
+    // Create the current timestamp for createdAt and modifiedAt
+    const currentTime = new Date().toISOString();
+
+    // Prepare the ticket (bon) data
+    const ticketData = {
+      idGhiseu: selectedGhiseuId,
+      stare: 0,
+      createdAt: currentTime,
+      modifiedAt: currentTime
+    };
+
+    try {
+      // Send the POST request
+      const response = await fetch(`${HostLink}/Bon/Add`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ticketData)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Ticket added successfully:', data);
+        fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon,selectedGhiseuActive);
+        // Optionally handle success, such as updating the UI
+      } else {
+        console.error('Failed to add the ticket:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error adding the ticket:', error);
+    }
+  }
+
 
     async function fetchData(): Promise<void> {
         try {
@@ -50,9 +96,10 @@
        
     }
 
-    async function fetchBons(id: number, ghiseuName: string,ghiseuIcon:string): Promise<void> {
+    async function fetchBons(id: number, ghiseuName: string,ghiseuIcon:string,ghiseuActive:boolean): Promise<void> {
     selectedGhiseuDenumire=ghiseuName;
     selectedGhiseuIcon=ghiseuIcon;
+    selectedGhiseuActive=ghiseuActive;
         try {
         const [bonResponse, ghiseuResponse] = await Promise.all([
             fetch(`${HostLink}/Bon/GetAll/${id}`),
@@ -98,7 +145,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         if (response.ok) {
             await fetchData(); // Refresh the data after updating the status
             if (selectedGhiseuId) {
-                fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon); 
+                fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon,selectedGhiseuActive); 
             }
         } else {
             console.error('Failed to update status');
@@ -156,7 +203,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
             toastMessage = `Șterge ${denumire}?`;
             showToast = true;
         } else if (action === 'allBonByIdPage') {
-            fetchBons(id,selectedGhiseuDenumire,selectedGhiseuIcon);
+            fetchBons(id,selectedGhiseuDenumire,selectedGhiseuIcon,selectedGhiseuActive);
         } else if (action) {
             goto(`/${action}`);
         }
@@ -173,7 +220,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
     const ghiseuIdParam = params.get('ghiseuId');
     if (ghiseuIdParam) {
         selectedGhiseuId = parseInt(ghiseuIdParam, 10);
-        fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon); // Automatically fetch Bons for the selected Ghiseu
+        fetchBons(selectedGhiseuId,selectedGhiseuDenumire,selectedGhiseuIcon,selectedGhiseuActive); // Automatically fetch Bons for the selected Ghiseu
     } // Fetch all Ghiseu data if no specific Ghiseu is selected
 
 });
@@ -227,7 +274,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                             <td>
                                 <div class="view-edit-delete-container">
                                     <!-- Bons Button with Ticket Icon -->
-                                    <button class="circle-btn black-btn" on:click={() => fetchBons(ghiseu.id,ghiseu.denumire,ghiseu.icon)}>
+                                    <button class="circle-btn black-btn" on:click={() => fetchBons(ghiseu.id,ghiseu.denumire,ghiseu.icon,ghiseu.activ)}>
                                         <i class="fas fa-ticket-alt"></i>
                                     </button>
                             
@@ -264,7 +311,7 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
                       Niciun ghiseu selectat
                     {/if}
                   </h1>
-            <button class="add-button" on:click={() => goto('/addBonPage')}>Adaugă Bon</button>
+                  <button class="add-button" on:click={addTicket} disabled={!selectedGhiseuActive}>Adaugă Bon</button>
            
             {#if selectedGhiseuId !== null}
                 {#if errorMessage && bons.length === 0}
@@ -442,6 +489,10 @@ async function handleStatusChange(newStatus: string, idBon: number): Promise<voi
         margin-bottom: 10px;
         font-size: 0.9em;
     }
+    .add-button:disabled {
+    color: gray; /* Change this to any color you prefer */
+    cursor: not-allowed; /* Optional: change cursor to indicate it's disabled */
+  }
     .denumire-cell {
         display: flex;
         align-items: center;
