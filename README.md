@@ -11,7 +11,7 @@ The project connects to a backend API built in **ASP.NET Core** (available in [t
 - **SvelteKit CSS**: Custom styling for application using Svelte's scoped CSS features.
 - **HTML**: Semantic structure for the UI.
 
-<img src="https://github.com/RaduCruceat/TicketApplication-FE/blob/main/Screenshots/Screen1.png" alt="Cars Page"  width="800">
+<img src="https://github.com/RaduCruceat/TicketApplication-FE/blob/main/Screenshots/Screen2.png" alt="Cars Page"  width="800">
 
 ## Features
 
@@ -33,9 +33,4 @@ The project connects to a backend API built in **ASP.NET Core** (available in [t
   - **Creation Time**
   - **Last Edited Time**
 
-### Frontend Tech Stack
-- **Svelte**: Fast and reactive front-end framework.
-- **TypeScript**: Typed JavaScript for better development experience.
-- **SvelteKit CSS**: Custom styling for application using Svelte's scoped CSS features.
-- **HTML**: Semantic structure for the UI.
 
