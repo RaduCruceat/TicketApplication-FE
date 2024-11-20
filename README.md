@@ -32,5 +32,5 @@ The project connects to a backend API built in **ASP.NET Core** (available in [t
 - **Timestamp Management:** Each ticket stores:
   - **Creation Time**
   - **Last Edited Time**
-
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=RaduCruceat&repo=TicketApplication-FE)](https://github.com/RaduCruceat/TicketApplication-FE)
 
